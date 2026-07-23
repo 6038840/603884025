@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f6f8fb" />
+  <title>湖北省住房供应链｜抽奖活动管理 2.0 原型</title>
+  <style>
+    :root {
+      --primary: #1677ff;
+      --primary-soft: #eaf3ff;
+      --primary-deep: #0958d9;
+      --success: #20a66a;
+      --warning: #e59b20;
+      --danger: #e44b43;
+      --purple: #7a59d1;
+      --ink: #20242a;
+      --text: #414751;
+      --muted: #7f8997;
+      --line: #e5e9ef;
+      --line-strong: #d7dde5;
+      --surface: #fff;
+      --canvas: #f5f7fa;
+      --sidebar: 232px;
+      --topbar: 64px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-width: 1080px; min-height: 100%; margin: 0; color: var(--text); background: var(--canvas); }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(22,119,255,.18);
+      outline-offset: 1px;
+    }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 40;
+      height: var(--topbar);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 2px 12px rgba(42,58,78,.04);
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; color: #20242a; font-weight: 850; font-size: 21px; }
+    .brand-mark {
+      width: 39px;
+      height: 39px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      color: #fff;
+      background: #ef2535;
+      box-shadow: 0 7px 16px rgba(226, 40, 54, .2);
+      font-size: 23px;
+    }
+    .account-button {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 0;
+      color: #3f444c;
+      background: transparent;
+      font-weight: 650;
+    }
+    .account-avatar {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg,#138ee9,#67c3ff);
+      font-size: 15px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: var(--topbar);
+      bottom: 0;
+      left: 0;
+      z-index: 30;
+      width: var(--sidebar);
+      padding: 16px 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      background: #fff;
+      transition: width .2s ease;
+    }
+    .sidebar.collapsed { width: 72px; }
+    .sidebar.collapsed .nav-text,
+    .sidebar.collapsed .nav-chevron,
+    .sidebar.collapsed .nav-group-title { display: none; }
+    .sidebar.collapsed .nav-item { justify-content: center; padding-inline: 0; }
+    .sidebar.collapsed .sub-nav { padding-left: 0; }
+
+    .collapse-btn {
+      width: 40px;
+      height: 34px;
+      margin: 0 16px 16px;
+      border: 0;
+      border-radius: 8px;
+      color: #8b98aa;
+      background: #f6f8fb;
+      font-size: 19px;
+    }
+
+    .nav-group-title { padding: 0 22px 9px; color: #a1a9b5; font-size: 11px; }
+    .nav-item {
+      width: 100%;
+      min-height: 47px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 20px;
+      border: 0;
+      color: #404650;
+      background: transparent;
+      text-align: left;
+      font-size: 14px;
+    }
+    .nav-item:hover { background: #f7f9fc; }
+    .nav-item.active { color: var(--primary); background: #edf7ff; font-weight: 700; }
+    .nav-icon { width: 22px; flex: 0 0 22px; text-align: center; color: #8091a8; font-size: 18px; }
+    .nav-item.active .nav-icon { color: var(--primary); }
+    .nav-text { flex: 1; }
+    .nav-chevron { color: #93a0b2; }
+    .sub-nav { padding: 3px 0 3px 34px; }
+    .sub-nav .nav-item { min-height: 43px; padding-left: 20px; font-size: 13px; }
+
+    .main {
+      min-height: 100vh;
+      margin-left: var(--sidebar);
+      padding: calc(var(--topbar) + 22px) 24px 36px;
+      transition: margin-left .2s ease;
+    }
+    .main.expanded { margin-left: 72px; }
+    .page { max-width: 1600px; margin: 0 auto; }
+
+    .breadcrumb { margin-bottom: 10px; color: #8a95a4; font-size: 12px; }
+    .breadcrumb button { padding: 0; border: 0; color: var(--primary); background: transparent; }
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+    .page-header h1 { margin: 0; color: #1f2328; font-size: 25px; letter-spacing: -.02em; }
+    .page-header p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .header-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
+
+    .btn {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: #424852;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .btn:hover { border-color: #9dbce7; color: var(--primary); }
+    .btn.primary { border-color: var(--primary); color: #fff; background: var(--primary); box-shadow: 0 5px 12px rgba(22,119,255,.15); }
+    .btn.primary:hover { background: var(--primary-deep); }
+    .btn.danger { border-color: #f1b9b6; color: var(--danger); background: #fff; }
+    .btn.warning { border-color: #f1d08f; color: #b87505; background: #fffaf0; }
+    .btn.small { min-height: 30px; padding: 0 9px; font-size: 11px; }
+    .btn.link { min-height: 28px; padding: 0 5px; border-color: transparent; color: var(--primary); background: transparent; }
+    .btn[disabled] { cursor: not-allowed; opacity: .46; }
+
+    .metric-grid { display: grid; grid-template-columns: repeat(5, minmax(130px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .metric-card {
+      min-height: 112px;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+    }
+    .metric-label { color: #6e7784; font-size: 12px; }
+    .metric-value { margin-top: 10px; color: #24282e; font-size: 27px; font-weight: 800; }
+    .metric-note { margin-top: 6px; color: #9aa3af; font-size: 10px; }
+
+    .card {
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: 0 7px 22px rgba(45, 61, 81, .035);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 60px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .card-header h2 { margin: 0; color: #262a30; font-size: 17px; }
+    .card-header p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+    .card-body { padding: 18px; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .filters { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .control {
+      height: 36px;
+      padding: 0 11px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: #3f4650;
+      background: #fff;
+      font-size: 12px;
+    }
+    input.control { min-width: 210px; }
+    select.control { min-width: 130px; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th {
+      height: 46px;
+      padding: 0 12px;
+      color: #596373;
+      background: #f6f8fb;
+      font-weight: 700;
+      text-align: left;
+      white-space: nowrap;
+    }
+    td { min-height: 50px; padding: 12px; border-bottom: 1px solid #edf0f4; vertical-align: middle; }
+    tbody tr:hover { background: #fafcff; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .cell-main { color: #2e333a; font-weight: 650; }
+    .cell-sub { margin-top: 3px; color: #929ba8; font-size: 10px; }
+    .nowrap { white-space: nowrap; }
+    .row-actions { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .status.active { color: #168357; background: #e7f8f0; }
+    .status.paused { color: #7a55c6; background: #f0ebff; }
+    .status.upcoming { color: #b07b11; background: #fff5d8; }
+    .status.ended { color: #7b8491; background: #eef1f4; }
+    .status.waiting { color: #b36c00; background: #fff2d6; }
+    .status.contact { color: #176dcc; background: #e8f2ff; }
+    .status.unreachable { color: #cf493f; background: #ffedeb; }
+    .status.claimed { color: #168357; background: #e7f8f0; }
+
+    .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 14px; color: #8a94a2; font-size: 11px; }
+    .page-btn { width: 30px; height: 30px; border: 1px solid var(--line); border-radius: 6px; color: #59616c; background: #fff; }
+    .page-btn.active { border-color: var(--primary); color: #fff; background: var(--primary); }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      min-height: 50px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .tab {
+      align-self: stretch;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      color: #626c79;
+      background: transparent;
+      font-size: 12px;
+    }
+    .tab.active { color: var(--primary); font-weight: 700; }
+    .tab.active::after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: 2px; background: var(--primary); }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .detail-block { padding: 16px; border: 1px solid var(--line); border-radius: 9px; }
+    .detail-block h3 { margin: 0 0 13px; color: #30353c; font-size: 14px; }
+    .kv-grid { display: grid; grid-template-columns: 112px 1fr; gap: 11px 12px; font-size: 11px; }
+    .kv-label { color: #8a93a0; }
+    .kv-value { color: #39404a; }
+
+    .form-section { padding: 19px 20px 2px; border-bottom: 1px solid var(--line); }
+    .form-section:last-child { border-bottom: 0; }
+    .form-section-title { margin: 0 0 16px; color: #2d3239; font-size: 15px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 22px; }
+    .form-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { display: flex; gap: 4px; margin-bottom: 7px; color: #5f6875; font-size: 11px; font-weight: 650; }
+    .field label.required::before { content: "*"; color: var(--danger); }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: #333a43;
+      background: #fff;
+      font-size: 12px;
+    }
+    .field input, .field select { height: 38px; padding: 0 10px; }
+    .field textarea { min-height: 100px; padding: 10px; resize: vertical; line-height: 1.6; }
+    .field input[readonly] { color: #7e8793; background: #f7f8fa; }
+    .field-help { margin-top: 5px; color: #969faa; font-size: 10px; line-height: 1.5; }
+    .field-error { margin-top: 5px; color: var(--danger); font-size: 10px; }
+
+    .switch-row { min-height: 38px; display: flex; align-items: center; gap: 9px; }
+    .switch { position: relative; width: 38px; height: 21px; flex: 0 0 auto; }
+    .switch input { position: absolute; opacity: 0; pointer-events: none; }
+    .switch span { position: absolute; inset: 0; border-radius: 12px; background: #c7cdd5; transition: .18s ease; }
+    .switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); transition: .18s ease; }
+    .switch input:checked + span { background: var(--primary); }
+    .switch input:checked + span::after { translate: 17px 0; }
+
+    .form-footer { display: flex; justify-content: flex-end; gap: 9px; padding: 17px 20px; background: #fbfcfd; }
+    .form-alert { margin: 16px 20px 0; padding: 10px 12px; border-radius: 7px; font-size: 11px; line-height: 1.55; }
+    .form-alert.error { color: #b83530; background: #fff0ee; border: 1px solid #f3c4c0; }
+    .form-alert.info { color: #2e669e; background: #edf6ff; border: 1px solid #c9e2fb; }
+
+    .probability-summary {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 11px 13px;
+      border: 1px solid #cfe3fb;
+      border-radius: 8px;
+      color: #42698f;
+      background: #f2f8ff;
+      font-size: 11px;
+    }
+    .probability-summary b { color: var(--primary); font-size: 14px; }
+
+    .inline-input {
+      width: 74px;
+      height: 32px;
+      padding: 0 7px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      color: #38404a;
+      background: #fff;
+      font-size: 11px;
+      text-align: center;
+    }
+    .release-cell { min-width: 58px; text-align: center; }
+    .release-total.ok { color: var(--success); font-weight: 700; }
+    .release-total.bad { color: var(--danger); font-weight: 700; }
+    .sticky-actions { position: sticky; right: 0; background: inherit; }
+
+    .empty { padding: 44px 20px; color: #9aa3af; text-align: center; }
+    .empty-icon { margin-bottom: 8px; font-size: 35px; }
+
+    .modal-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(28,37,48,.48);
+      backdrop-filter: blur(2px);
+    }
+    .modal-layer.open { display: flex; }
+    .modal {
+      width: min(680px, calc(100vw - 48px));
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      border-radius: 11px;
+      background: #fff;
+      box-shadow: 0 25px 80px rgba(24,35,49,.28);
+      animation: modal-in .18s ease both;
+    }
+    .modal.small { width: min(460px, calc(100vw - 48px)); }
+    .modal.wide { width: min(920px, calc(100vw - 48px)); }
+    @keyframes modal-in { from { opacity: 0; transform: translateY(10px) scale(.985); } }
+    .modal-header { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 58px; padding: 0 19px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.97); }
+    .modal-header h3 { margin: 0; color: #282d34; font-size: 16px; }
+    .modal-close { width: 31px; height: 31px; border: 0; border-radius: 7px; color: #8b95a2; background: #f5f7f9; font-size: 18px; }
+    .modal-body { padding: 19px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 9px; padding: 14px 19px; border-top: 1px solid var(--line); background: #fafbfc; }
+
+    .confirm-icon { width: 52px; height: 52px; display: grid; place-items: center; margin-bottom: 13px; border-radius: 50%; color: #b97900; background: #fff2cf; font-size: 26px; }
+    .confirm-title { margin: 0 0 7px; color: #292e35; font-size: 18px; }
+    .confirm-desc { margin: 0; color: #7c8692; font-size: 12px; line-height: 1.65; }
+
+    .detail-list { display: grid; grid-template-columns: 120px 1fr; gap: 12px; font-size: 12px; }
+    .detail-list dt { color: #8a94a1; }
+    .detail-list dd { margin: 0; color: #363d46; }
+    .divider { height: 1px; margin: 16px 0; background: var(--line); }
+
+    .check-row { display: flex; align-items: flex-start; gap: 9px; margin: 12px 0; color: #4c5560; font-size: 12px; line-height: 1.55; }
+    .check-row input { margin-top: 2px; accent-color: var(--primary); }
+
+    .toast {
+      position: fixed;
+      z-index: 130;
+      top: 82px;
+      left: 50%;
+      min-width: 250px;
+      max-width: 520px;
+      padding: 11px 15px;
+      border-radius: 8px;
+      color: #fff;
+      background: rgba(42,49,59,.94);
+      box-shadow: 0 12px 30px rgba(29,39,52,.2);
+      font-size: 12px;
+      text-align: center;
+      opacity: 0;
+      transform: translate(-50%, -12px);
+      pointer-events: none;
+      transition: .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    .toast.success { background: rgba(26,139,91,.96); }
+    .toast.error { background: rgba(208,65,57,.96); }
+
+    @media (max-width: 1250px) {
+      .metric-grid { grid-template-columns: repeat(3, 1fr); }
+      .form-grid.three { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">⌂</span><span>湖北省住房供应链政府平台</span></div>
+    <button class="account-button" data-action="account"><span class="account-avatar">运</span><span>孝感市运营账号</span><span>⌄</span></button>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <button class="collapse-btn" data-action="toggle-sidebar" title="收起/展开侧边栏">☰</button>
+    <div class="nav-group-title">活动运营</div>
+    <button class="nav-item active" data-nav="activities"><span class="nav-icon">◎</span><span class="nav-text">抽奖活动管理</span><span class="nav-chevron">⌄</span></button>
+    <div class="sub-nav">
+      <button class="nav-item active" data-nav="activities"><span class="nav-icon">▤</span><span class="nav-text">抽奖活动列表</span></button>
+      <button class="nav-item" data-nav="prizes"><span class="nav-icon">◇</span><span class="nav-text">奖品管理</span></button>
+    </div>
+    <div class="nav-group-title" style="margin-top:20px">数据说明</div>
+    <div class="nav-item" aria-disabled="true"><span class="nav-icon">ⓘ</span><span class="nav-text">参与、助力和中奖记录统一在活动详情中查看</span></div>
+  </aside>
+
+  <main class="main" id="main"><div class="page" id="view"></div></main>
+
+  <div class="modal-layer" id="modalLayer" aria-hidden="true"><div class="modal" id="modal"></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+      const dates = ['8月3日','8月4日','8月5日','8月6日','8月7日'];
+
+      const activity = {
+        id: 'ACT-20260803-001',
+        name: '链动美好·悦鉴山月',
+        subtitle: '望度山月·仰望｜夏日幸运大抽奖活动',
+        status: 'active',
+        template: '老虎机',
+        start: '2026-08-03T00:00',
+        end: '2026-08-07T23:59',
+        pagePath: '/pages/lottery/index?id=act_20260803_xgyj',
+        coverName: '悦鉴山月抽奖封面.png',
+        showPrizes: true,
+        baseChances: 3,
+        helpEnabled: true,
+        helpsPerChance: 2,
+        helperDailyLimit: 1,
+        dailyWinLimit: 1,
+        rules: '8月3日至7日为线上抽奖时间，8月8日至9日为线下领奖时间。每个账号首次获得3次抽奖机会；每2名有效好友助力增加1次机会，增加次数不设上限；每名好友每天只能助力1次。每个账号可以多次中奖，但每天最多中奖1次。奖品分日释放，未抽完的已释放库存自动保留至后续活动日。中奖后须填写真实姓名和手机号，凭本人身份证原件核销领奖。',
+        metrics: { participants: 1286, draws: 3862, winners: 42, remaining: 39, helps: 2034 }
+      };
+
+      const activities = [
+        activity,
+        { id:'ACT-20260624-003', name:'六月清凉家电节', subtitle:'夏日清凉好物抽奖', status:'paused', template:'老虎机', start:'2026-06-24T00:00', end:'2026-07-31T23:59', participants:620, winners:18, prizeCount:5 },
+        { id:'ACT-20260412-002', name:'春日品牌狂欢抽奖', subtitle:'品牌联动活动', status:'ended', template:'大转盘', start:'2026-04-12T10:00', end:'2026-04-18T23:00', participants:420, winners:24, prizeCount:4 }
+      ];
+
+      const prizes = [
+        { id:'P001', name:'神农架避暑康养旅居（双人5天4晚）', total:1, occupied:1, description:'宜昌东站接送，8月16日至9月15日期间预约发团', activities:1 },
+        { id:'P002', name:'九阳0氟电饭煲4L', total:1, occupied:1, description:'九阳4L电饭煲', activities:1 },
+        { id:'P003', name:'苏泊尔烤肉锅', total:1, occupied:1, description:'家庭多功能烤肉锅', activities:1 },
+        { id:'P004', name:'探险者99cm不锈钢加厚烧烤炉', total:1, occupied:1, description:'户外加厚烧烤炉', activities:1 },
+        { id:'P005', name:'小熊电火锅', total:1, occupied:1, description:'小熊多功能电火锅', activities:1 },
+        { id:'P006', name:'小熊5L免翻面空气炸锅', total:1, occupied:1, description:'5L大容量空气炸锅', activities:1 },
+        { id:'P007', name:'天堂伞防紫外线晴雨伞', total:20, occupied:20, description:'防紫外线晴雨两用伞', activities:1 },
+        { id:'P008', name:'望度山月纪念礼品', total:50, occupied:50, description:'项目定制纪念礼品，数量暂按50份', activities:1 },
+        { id:'P009', name:'签字笔', total:100, occupied:0, description:'普通圆珠笔', activities:0 }
+      ];
+
+      const prizeConfigs = [
+        { id:'C001', prizeId:'P001', label:'特别奖', qty:1, probability:.01, release:[0,0,0,0,1], won:0, remaining:1 },
+        { id:'C002', prizeId:'P002', label:'幸运奖', qty:1, probability:.03, release:[1,0,0,0,0], won:1, remaining:0 },
+        { id:'C003', prizeId:'P003', label:'幸运奖', qty:1, probability:.03, release:[0,1,0,0,0], won:0, remaining:1 },
+        { id:'C004', prizeId:'P004', label:'幸运奖', qty:1, probability:.03, release:[0,0,1,0,0], won:0, remaining:1 },
+        { id:'C005', prizeId:'P005', label:'幸运奖', qty:1, probability:.03, release:[0,0,0,1,0], won:0, remaining:1 },
+        { id:'C006', prizeId:'P006', label:'幸运奖', qty:1, probability:.03, release:[0,0,0,0,1], won:1, remaining:0 },
+        { id:'C007', prizeId:'P007', label:'幸运奖', qty:20, probability:1.5, release:[4,4,4,4,4], won:8, remaining:12 },
+        { id:'C008', prizeId:'P008', label:'纪念奖', qty:50, probability:5, release:[10,10,10,10,10], won:24, remaining:26 }
+      ];
+
+      const participants = [
+        { id:'U001', nickname:'陶喜儿', phone:'178****1200', base:3, helps:6, total:6, used:4, winDays:1, last:'2026-08-05 10:12' },
+        { id:'U002', nickname:'王军', phone:'181****1573', base:3, helps:2, total:4, used:4, winDays:1, last:'2026-08-05 09:48' },
+        { id:'U003', nickname:'赵涛', phone:'181****2454', base:3, helps:0, total:3, used:2, winDays:0, last:'2026-08-04 17:21' },
+        { id:'U004', nickname:'何娜', phone:'173****4771', base:3, helps:10, total:8, used:5, winDays:2, last:'2026-08-04 11:36' },
+        { id:'U005', nickname:'李超', phone:'181****4924', base:3, helps:4, total:5, used:3, winDays:1, last:'2026-08-03 16:07' }
+      ];
+
+      const winners = [
+        { id:'W001', nickname:'陶喜儿', realName:'陶喜儿', phone:'17812341200', prize:'天堂伞防紫外线晴雨伞', time:'2026-08-05 10:12', status:'waitingContact', contact:'未联系', claim:'未核销' },
+        { id:'W002', nickname:'王军', realName:'王军', phone:'18123451573', prize:'望度山月纪念礼品', time:'2026-08-05 09:48', status:'waitingClaim', contact:'已联系', claim:'未核销' },
+        { id:'W003', nickname:'何娜', realName:'', phone:'', prize:'小熊电火锅', time:'2026-08-04 11:36', status:'waitingInfo', contact:'—', claim:'未核销' },
+        { id:'W004', nickname:'李超', realName:'李超', phone:'18177884924', prize:'小熊5L免翻面空气炸锅', time:'2026-08-03 16:07', status:'unreachable', contact:'联系不上', claim:'未核销' },
+        { id:'W005', nickname:'林静', realName:'林静', phone:'15387657808', prize:'九阳0氟电饭煲4L', time:'2026-08-03 10:29', status:'claimed', contact:'已联系', claim:'已核销' }
+      ];
+
+      const ui = { view:'activities', activityTab:'overview', selectedPrize:'P001', toastTimer:null };
+
+      const prizeById = id => prizes.find(item => item.id === id);
+      const activityStatus = {
+        active:['进行中','active'], paused:['已暂停','paused'], upcoming:['未开始','upcoming'], ended:['已结束','ended']
+      };
+      const winnerStatus = {
+        waitingInfo:['待用户填写信息','waiting'], waitingContact:['待联系','contact'], waitingClaim:['待核销','contact'], unreachable:['联系不上','unreachable'], claimed:['已核销','claimed']
+      };
+
+      function toast(message, type='normal') {
+        const el = $('#toast');
+        el.textContent = message;
+        el.className = `toast show ${type === 'normal' ? '' : type}`;
+        clearTimeout(ui.toastTimer);
+        ui.toastTimer = setTimeout(() => el.className = 'toast', 2300);
+      }
+
+      function openModal(html, size='normal') {
+        $('#modal').className = `modal ${size === 'normal' ? '' : size}`;
+        $('#modal').innerHTML = html;
+        $('#modalLayer').classList.add('open');
+        $('#modalLayer').setAttribute('aria-hidden','false');
+      }
+
+      function closeModal() {
+        $('#modalLayer').classList.remove('open');
+        $('#modalLayer').setAttribute('aria-hidden','true');
+      }
+
+      function statusTag(status) {
+        const [label, cls] = activityStatus[status];
+        return `<span class="status ${cls}">${label}</span>`;
+      }
+
+      function winStatusTag(status) {
+        const [label, cls] = winnerStatus[status];
+        return `<span class="status ${cls}">${label}</span>`;
+      }
+
+      function render() {
+        if (ui.view === 'activities') renderActivityList();
+        if (ui.view === 'activityDetail') renderActivityDetail();
+        if (ui.view === 'prizes') renderPrizeList();
+        if (ui.view === 'prizeDetail') renderPrizeDetail();
+        syncSidebar();
+      }
+
+      function syncSidebar() {
+        $$('[data-nav]').forEach(btn => {
+          const active = (ui.view === 'activities' || ui.view === 'activityDetail') ? btn.dataset.nav === 'activities' : btn.dataset.nav === 'prizes';
+          btn.classList.toggle('active', active);
+        });
+      }
+
+      function renderActivityList() {
+        const totalParticipants = activities.reduce((sum,item) => sum + (item.metrics?.participants || item.participants || 0), 0);
+        const totalWinners = activities.reduce((sum,item) => sum + (item.metrics?.winners || item.winners || 0), 0);
+        $('#view').innerHTML = `
+          <div class="page-header"><div><h1>抽奖活动列表</h1><p>创建和管理抽奖活动，查看活动状态、参与及中奖数据。</p></div><div class="header-actions"><button class="btn primary" data-action="new-activity">＋ 新增活动</button></div></div>
+          <div class="metric-grid" style="grid-template-columns:repeat(4,1fr)">
+            ${metricCard('活动总数',activities.length,'包含历史活动')}
+            ${metricCard('进行中活动',activities.filter(i=>i.status==='active').length,'支持暂停与恢复')}
+            ${metricCard('累计参与人数',formatNumber(totalParticipants),'按账号去重统计')}
+            ${metricCard('累计中奖人数',formatNumber(totalWinners),'以中奖记录为准')}
+          </div>
+          <section class="card">
+            <div class="card-header"><div><h2>活动列表</h2><p>点击“查看详情”进入配置、参与记录和中奖核销。</p></div></div>
+            <div class="card-body">
+              <div class="toolbar"><div class="filters"><input class="control" id="activitySearch" placeholder="搜索活动名称" /><select class="control" id="activityStatusFilter"><option value="all">全部状态</option><option value="active">进行中</option><option value="paused">已暂停</option><option value="ended">已结束</option></select></div><button class="btn" data-action="refresh-activities">↻ 刷新</button></div>
+              <div class="table-wrap"><table><thead><tr><th>活动名称</th><th>状态</th><th>抽奖模板</th><th>奖品数</th><th>参与人数</th><th>中奖人数</th><th>活动时间</th><th>操作</th></tr></thead><tbody id="activityTableBody">${activityRows(activities)}</tbody></table></div>
+              <div class="pagination"><span>共 ${activities.length} 条</span><button class="page-btn active">1</button></div>
+            </div>
+          </section>`;
+      }
+
+      function activityRows(items) {
+        if (!items.length) return `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⌕</div>没有符合条件的活动</div></td></tr>`;
+        return items.map(item => {
+          const isMain = item.id === activity.id;
+          return `<tr>
+            <td><div class="cell-main">${item.name}</div><div class="cell-sub">${item.id}</div></td>
+            <td>${statusTag(item.status)}</td><td>${item.template}</td><td>${isMain ? prizeConfigs.length : item.prizeCount}</td>
+            <td>${formatNumber(isMain ? item.metrics.participants : item.participants)}</td><td>${isMain ? item.metrics.winners : item.winners}</td>
+            <td class="nowrap">${fmtDate(item.start)}<br><span class="cell-sub">至 ${fmtDate(item.end)}</span></td>
+            <td><div class="row-actions"><button class="btn link" data-action="view-activity" data-id="${item.id}">${isMain ? '查看详情' : '查看'}</button>${isMain ? `<button class="btn link" data-action="copy-link">复制页面地址</button>` : ''}</div></td>
+          </tr>`;
+        }).join('');
+      }
+
+      function renderActivityDetail() {
+        const [statusLabel] = activityStatus[activity.status];
+        $('#view').innerHTML = `
+          <div class="breadcrumb"><button data-action="back-activities">抽奖活动列表</button>　/　${activity.name}</div>
+          <div class="page-header">
+            <div><h1>${activity.name}　${statusTag(activity.status)}</h1><p>${activity.subtitle} · ${activity.id}</p></div>
+            <div class="header-actions"><button class="btn" data-action="copy-link">复制页面地址</button><button class="btn" data-action="export-winners">导出中奖名单</button>${activity.status === 'active' ? `<button class="btn warning" data-action="pause-activity">暂停活动</button>` : activity.status === 'paused' ? `<button class="btn primary" data-action="resume-activity">恢复活动</button>` : ''}</div>
+          </div>
+          <div class="metric-grid">
+            ${metricCard('活动状态',statusLabel,'到期自动结束')}
+            ${metricCard('参与人数',formatNumber(activity.metrics.participants),'账号去重')}
+            ${metricCard('累计抽奖',formatNumber(activity.metrics.draws),'成功抽奖请求')}
+            ${metricCard('有效助力',formatNumber(activity.metrics.helps),'每名好友每日1次')}
+            ${metricCard('中奖记录',activity.metrics.winners,'剩余活动库存 '+activity.metrics.remaining)}
+          </div>
+          <section class="card">
+            <nav class="tabs">${[
+              ['overview','活动概览'],['basic','活动配置'],['prizes','奖品配置'],['participants','参与记录'],['winners','中奖与核销']
+            ].map(([key,label])=>`<button class="tab ${ui.activityTab===key?'active':''}" data-activity-tab="${key}">${label}</button>`).join('')}</nav>
+            <div id="tabContent">${renderActivityTab()}</div>
+          </section>`;
+      }
+
+      function renderActivityTab() {
+        if (ui.activityTab === 'overview') return overviewTab();
+        if (ui.activityTab === 'basic') return basicTab();
+        if (ui.activityTab === 'prizes') return prizesTab();
+        if (ui.activityTab === 'participants') return participantsTab();
+        if (ui.activityTab === 'winners') return winnersTab();
+      }
+
+      function overviewTab() {
+        const prob = totalProbability();
+        return `<div class="card-body">
+          <div class="detail-grid">
+            <div class="detail-block"><h3>活动基础信息</h3><div class="kv-grid"><div class="kv-label">线上抽奖时间</div><div class="kv-value">${fmtDateTime(activity.start)} — ${fmtDateTime(activity.end)}</div><div class="kv-label">抽奖模板</div><div class="kv-value">${activity.template}</div><div class="kv-label">页面地址</div><div class="kv-value">${activity.pagePath}</div><div class="kv-label">奖品橱窗</div><div class="kv-value">${activity.showPrizes?'展示':'不展示'}</div></div></div>
+            <div class="detail-block"><h3>参与与中奖规则</h3><div class="kv-grid"><div class="kv-label">基础机会</div><div class="kv-value">每个账号 ${activity.baseChances} 次</div><div class="kv-label">好友助力</div><div class="kv-value">每 ${activity.helpsPerChance} 名有效好友 +1次，不设上限</div><div class="kv-label">好友日上限</div><div class="kv-value">每名好友每天 ${activity.helperDailyLimit} 次</div><div class="kv-label">中奖上限</div><div class="kv-value">每账号每天 ${activity.dailyWinLimit} 次，可跨日多次中奖</div></div></div>
+            <div class="detail-block"><h3>奖品与概率</h3><div class="kv-grid"><div class="kv-label">活动奖品</div><div class="kv-value">${prizeConfigs.length} 种，共 ${sum(prizeConfigs.map(i=>i.qty))} 份</div><div class="kv-label">总中奖概率</div><div class="kv-value">${prob.toFixed(2)}%</div><div class="kv-label">未中奖概率</div><div class="kv-value">${(100-prob).toFixed(2)}%</div><div class="kv-label">释放方式</div><div class="kv-value">按8月3日至7日分日新增可抽库存，前日剩余自动保留</div></div></div>
+            <div class="detail-block"><h3>中奖处理</h3><div class="kv-grid"><div class="kv-label">中奖登记</div><div class="kv-value">用户填写真实姓名、手机号码</div><div class="kv-label">工作人员联系</div><div class="kv-value">后台记录已联系或联系不上</div><div class="kv-label">现场核销</div><div class="kv-value">核对中奖人本人身份证原件后操作核销</div><div class="kv-label">未发完奖品</div><div class="kv-value">活动结束后不补抽，剩余库存释放回奖品库</div></div></div>
+          </div>
+          <div class="form-alert info">本活动沿用1.0即时开奖和活动库存逻辑；2.0仅增加动态机会、每日中奖限制、分日释放和中奖核销状态。</div>
+        </div>`;
+      }
+
+      function basicTab() {
+        return `<form id="activityForm" novalidate>
+          <div id="activityFormAlert"></div>
+          <section class="form-section"><h3 class="form-section-title">活动基础信息</h3><div class="form-grid">
+            ${field('活动主题','activityName',activity.name,true)}
+            ${field('活动副标题','activitySubtitle',activity.subtitle,true)}
+            ${field('小程序页面地址','activityPath',activity.pagePath,false,'text',true,'创建活动后自动生成，无须人工修改')}
+            <div class="field"><label>活动封面</label><div class="switch-row"><span id="coverName">${activity.coverName}</span><button class="btn small" type="button" data-action="change-cover">更换封面</button></div><div class="field-help">支持 JPG / PNG / WEBP，不超过2MB，建议尺寸750×400。</div></div>
+            ${field('开始时间','activityStart',activity.start,true,'datetime-local')}
+            ${field('结束时间','activityEnd',activity.end,true,'datetime-local')}
+            <div class="field"><label class="required">抽奖模板</label><select id="activityTemplate"><option ${activity.template==='老虎机'?'selected':''}>老虎机</option><option ${activity.template==='大转盘'?'selected':''}>大转盘</option><option>刮刮卡</option></select><div class="field-help">活动进行中后不可修改。</div></div>
+            <div class="field"><label>奖品橱窗</label><div class="switch-row"><label class="switch"><input type="checkbox" id="showPrizes" ${activity.showPrizes?'checked':''}><span></span></label><span>在小程序活动页展示奖品列表</span></div></div>
+            <div class="field full"><label class="required">活动规则</label><textarea id="activityRules">${activity.rules}</textarea></div>
+          </div></section>
+          <section class="form-section"><h3 class="form-section-title">参与与中奖规则</h3><div class="form-grid three">
+            ${field('基础抽奖机会','baseChances',activity.baseChances,true,'number',false,'用户首次进入活动获得的机会数')}
+            <div class="field"><label>好友助力</label><div class="switch-row"><label class="switch"><input type="checkbox" id="helpEnabled" ${activity.helpEnabled?'checked':''}><span></span></label><span>开启邀请好友助力</span></div></div>
+            ${field('每增加1次机会所需好友数','helpsPerChance',activity.helpsPerChance,true,'number',false,'增加次数不设上限')}
+            ${field('每名好友每日助力上限','helperDailyLimit',activity.helperDailyLimit,true,'number',false,'本活动固定为1次')}
+            ${field('每个账号每日中奖上限','dailyWinLimit',activity.dailyWinLimit,true,'number',false,'可跨活动日多次中奖')}
+          </div></section>
+          <div class="form-footer"><button class="btn" type="button" data-action="reset-basic">恢复当前配置</button><button class="btn primary" type="submit">保存活动配置</button></div>
+        </form>`;
+      }
+
+      function prizesTab() {
+        const prob = totalProbability();
+        return `<div class="card-body">
+          <div id="prizeConfigAlert"></div>
+          <div class="toolbar"><div class="probability-summary"><span>已配置 <b>${prizeConfigs.length}</b> 种奖品</span><span>配置数量 <b>${sum(prizeConfigs.map(i=>i.qty))}</b> 份</span><span>总中奖概率 <b id="probabilityTotal">${prob.toFixed(2)}%</b></span><span>未中奖概率 <b id="missProbability">${(100-prob).toFixed(2)}%</b></span></div><button class="btn primary" data-action="add-activity-prize">＋ 新增活动奖品</button></div>
+          <div class="table-wrap"><table id="prizeConfigTable"><thead><tr><th>奖品</th><th>奖项名称</th><th>配置数量</th><th>中奖概率（%）</th>${dates.map(d=>`<th class="release-cell">${d}<div class="cell-sub">新增库存</div></th>`).join('')}<th>释放合计</th><th>已中奖/剩余</th><th>操作</th></tr></thead><tbody>
+          ${prizeConfigs.map(config => {
+            const prize = prizeById(config.prizeId);
+            return `<tr data-config-id="${config.id}"><td style="min-width:190px"><div class="cell-main">${prize.name}</div><div class="cell-sub">总库存 ${prize.total} · 活动占用 ${config.qty}</div></td><td><input class="inline-input" style="width:86px" data-field="label" value="${config.label}"></td><td><input class="inline-input" data-field="qty" type="number" min="0" value="${config.qty}"></td><td><input class="inline-input probability-input" data-field="probability" type="number" min="0" max="100" step="0.01" value="${config.probability}"></td>${config.release.map((value,index)=>`<td class="release-cell"><input class="inline-input release-input" data-release-index="${index}" type="number" min="0" value="${value}"></td>`).join('')}<td><span class="release-total ok">${sum(config.release)} / ${config.qty}</span></td><td>${config.won} / ${config.remaining}</td><td><button class="btn link" data-action="remove-activity-prize" data-config-id="${config.id}">移除</button></td></tr>`;
+          }).join('')}</tbody></table></div>
+          <div class="form-alert info">每日数量表示当日新增可抽库存；前一日未抽完的已释放库存自动保留至后续日期。活动结束后不补抽。</div>
+        </div><div class="form-footer"><button class="btn" data-action="reset-prize-config">恢复当前配置</button><button class="btn primary" data-action="save-prize-config">保存奖品配置</button></div>`;
+      }
+
+      function participantsTab() {
+        return `<div class="card-body"><div class="toolbar"><div class="filters"><input class="control" id="participantSearch" placeholder="搜索昵称或手机号" /><select class="control" id="participantFilter"><option value="all">全部参与者</option><option value="helped">已有助力</option><option value="won">已中奖</option></select></div><button class="btn" data-action="export-participants">导出参与记录</button></div><div class="table-wrap"><table><thead><tr><th>参与用户</th><th>基础机会</th><th>有效助力</th><th>累计获得机会</th><th>已抽次数</th><th>剩余机会</th><th>中奖天数</th><th>最后参与时间</th><th>操作</th></tr></thead><tbody id="participantTableBody">${participantRows(participants)}</tbody></table></div><div class="pagination"><span>展示示例数据 ${participants.length} 条</span><button class="page-btn active">1</button></div></div>`;
+      }
+
+      function participantRows(items) {
+        if (!items.length) return `<tr><td colspan="9"><div class="empty"><div class="empty-icon">⌕</div>没有符合条件的参与记录</div></td></tr>`;
+        return items.map(item=>`<tr><td><div class="cell-main">${item.nickname}</div><div class="cell-sub">${item.phone}</div></td><td>${item.base}</td><td>${item.helps}</td><td>${item.total}</td><td>${item.used}</td><td>${Math.max(0,item.total-item.used)}</td><td>${item.winDays}</td><td class="nowrap">${item.last}</td><td><button class="btn link" data-action="participant-detail" data-id="${item.id}">查看详情</button></td></tr>`).join('');
+      }
+
+      function winnersTab() {
+        return `<div class="card-body"><div class="toolbar"><div class="filters"><input class="control" id="winnerSearch" placeholder="搜索姓名或手机号" /><select class="control" id="winnerStatusFilter"><option value="all">全部状态</option><option value="waitingInfo">待用户填写信息</option><option value="waitingContact">待联系</option><option value="waitingClaim">待核销</option><option value="unreachable">联系不上</option><option value="claimed">已核销</option></select></div><button class="btn" data-action="export-winners">导出中奖名单</button></div><div class="table-wrap"><table><thead><tr><th>中奖用户</th><th>中奖人姓名</th><th>手机号码</th><th>奖品</th><th>中奖时间</th><th>联系结果</th><th>领奖状态</th><th>操作</th></tr></thead><tbody id="winnerTableBody">${winnerRows(winners)}</tbody></table></div><div class="pagination"><span>展示示例数据 ${winners.length} 条</span><button class="page-btn active">1</button></div></div>`;
+      }
+
+      function winnerRows(items) {
+        if (!items.length) return `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⌕</div>没有符合条件的中奖记录</div></td></tr>`;
+        return items.map(item=>`<tr><td><div class="cell-main">${item.nickname}</div><div class="cell-sub">${item.id}</div></td><td>${item.realName || '—'}</td><td>${item.phone ? maskPhone(item.phone) : '—'}</td><td style="max-width:240px">${item.prize}</td><td class="nowrap">${item.time}</td><td>${item.contact}</td><td>${winStatusTag(item.status)}</td><td><button class="btn link" data-action="winner-detail" data-id="${item.id}">查看/处理</button></td></tr>`).join('');
+      }
+
+      function renderPrizeList() {
+        const total = sum(prizes.map(i=>i.total));
+        const occupied = sum(prizes.map(i=>i.occupied));
+        $('#view').innerHTML = `
+          <div class="page-header"><div><h1>奖品管理</h1><p>维护全局奖品名称、总库存和说明，并查看活动占用情况。</p></div><div class="header-actions"><button class="btn primary" data-action="new-prize">＋ 新增奖品</button></div></div>
+          <div class="metric-grid" style="grid-template-columns:repeat(4,1fr)">${metricCard('奖品种数',prizes.length,'全局奖品库')}${metricCard('总库存数',total,'所有奖品合计')}${metricCard('已被活动占用',occupied,'活动配置预占')}${metricCard('剩余可分配库存',total-occupied,'可用于新活动')}</div>
+          <section class="card"><div class="card-header"><div><h2>奖品列表</h2><p>一个奖品可以被多个活动引用，已引用奖品不允许删除。</p></div></div><div class="card-body"><div class="toolbar"><div class="filters"><input class="control" id="prizeSearch" placeholder="搜索奖品名称" /></div><button class="btn" data-action="refresh-prizes">↻ 刷新</button></div><div class="table-wrap"><table><thead><tr><th>奖品ID</th><th>奖品名称</th><th>总库存</th><th>已被活动占用</th><th>剩余可分配</th><th>参与活动数</th><th>奖品说明</th><th>操作</th></tr></thead><tbody id="prizeTableBody">${prizeRows(prizes)}</tbody></table></div><div class="pagination"><span>共 ${prizes.length} 条</span><button class="page-btn active">1</button></div></div></section>`;
+      }
+
+      function prizeRows(items) {
+        if (!items.length) return `<tr><td colspan="8"><div class="empty"><div class="empty-icon">⌕</div>没有符合条件的奖品</div></td></tr>`;
+        return items.map(item=>`<tr><td>${item.id}</td><td><div class="cell-main">${item.name}</div></td><td>${item.total}</td><td>${item.occupied}</td><td>${item.total-item.occupied}</td><td>${item.activities}</td><td style="max-width:280px">${item.description}</td><td><button class="btn link" data-action="view-prize" data-id="${item.id}">查看设置</button></td></tr>`).join('');
+      }
+
+      function renderPrizeDetail() {
+        const prize = prizeById(ui.selectedPrize);
+        const linked = prize.activities ? `<tr><td>${activity.name}</td><td>${statusTag(activity.status)}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.qty || 0}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.remaining ?? 0}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.won ?? 0}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.probability ?? 0}%</td><td><button class="btn link" data-action="view-activity" data-id="${activity.id}">查看活动</button></td></tr>` : `<tr><td colspan="7"><div class="empty">当前没有活动使用这个奖品</div></td></tr>`;
+        $('#view').innerHTML = `
+          <div class="breadcrumb"><button data-action="back-prizes">奖品管理</button>　/　${prize.name}</div>
+          <div class="page-header"><div><h1>${prize.name}</h1><p>${prize.id} · 维护奖品基础信息和库存。</p></div><div class="header-actions"><button class="btn" data-action="back-prizes">返回奖品列表</button></div></div>
+          <div class="metric-grid" style="grid-template-columns:repeat(4,1fr)">${metricCard('总库存',prize.total,'全局库存')}${metricCard('已被活动占用',prize.occupied,'活动预占数量')}${metricCard('剩余可分配',prize.total-prize.occupied,'可用于其他活动')}${metricCard('参与活动数',prize.activities,'关联活动')}</div>
+          <form class="card" id="prizeForm" novalidate><div class="card-header"><div><h2>奖品基础设置</h2><p>已被活动引用时，总库存只能增加或保持不变。</p></div></div><div id="prizeFormAlert"></div><div class="card-body"><div class="form-grid">${field('奖品名称','prizeName',prize.name,true)}${field('总库存','prizeTotal',prize.total,true,'number',false,`当前活动已占用 ${prize.occupied}，总库存不能小于该数值`)}<div class="field full"><label class="required">奖品说明</label><textarea id="prizeDescription">${prize.description}</textarea></div></div></div><div class="form-footer"><button class="btn" type="button" data-action="back-prizes">取消</button><button class="btn primary" type="submit">保存奖品</button></div></form>
+          <section class="card"><div class="card-header"><div><h2>关联活动配置</h2><p>查看这个奖品在哪些活动中被使用，以及对应数量和中奖概率。</p></div></div><div class="card-body"><div class="table-wrap"><table><thead><tr><th>活动名称</th><th>活动状态</th><th>配置数量</th><th>剩余库存</th><th>已中奖数量</th><th>中奖概率</th><th>操作</th></tr></thead><tbody>${linked}</tbody></table></div></div></section>`;
+      }
+
+      function metricCard(label,value,note) { return `<div class="metric-card"><div class="metric-label">${label}</div><div class="metric-value">${value}</div><div class="metric-note">${note}</div></div>`; }
+      function field(label,id,value,required=false,type='text',readonly=false,help='') { return `<div class="field"><label class="${required?'required':''}" for="${id}">${label}</label><input id="${id}" type="${type}" value="${value}" ${readonly?'readonly':''}>${help?`<div class="field-help">${help}</div>`:''}<div class="field-error" data-error-for="${id}"></div></div>`; }
+
+      function showActivityFormError(messages) {
+        $('#activityFormAlert').innerHTML = `<div class="form-alert error"><b>无法保存：</b>${messages.join('；')}</div>`;
+        $('#activityFormAlert').scrollIntoView({behavior:'smooth',block:'center'});
+      }
+
+      function saveActivityForm() {
+        const name = $('#activityName').value.trim();
+        const subtitle = $('#activitySubtitle').value.trim();
+        const start = $('#activityStart').value;
+        const end = $('#activityEnd').value;
+        const base = Number($('#baseChances').value);
+        const helps = Number($('#helpsPerChance').value);
+        const helperLimit = Number($('#helperDailyLimit').value);
+        const winLimit = Number($('#dailyWinLimit').value);
+        const rules = $('#activityRules').value.trim();
+        const errors = [];
+        if (!name) errors.push('活动主题不能为空');
+        if (!subtitle) errors.push('活动副标题不能为空');
+        if (!start || !end || new Date(start) >= new Date(end)) errors.push('结束时间必须晚于开始时间');
+        if (!Number.isInteger(base) || base < 1) errors.push('基础抽奖机会必须为大于0的整数');
+        if (!Number.isInteger(helps) || helps < 1) errors.push('助力人数必须为大于0的整数');
+        if (helperLimit !== 1) errors.push('本活动每名好友每日助力上限应为1次');
+        if (winLimit !== 1) errors.push('本活动每个账号每日中奖上限应为1次');
+        if (!rules) errors.push('活动规则不能为空');
+        if (errors.length) { showActivityFormError(errors); return; }
+        Object.assign(activity,{name,subtitle,start,end,baseChances:base,helpsPerChance:helps,helperDailyLimit:helperLimit,dailyWinLimit:winLimit,rules,template:$('#activityTemplate').value,showPrizes:$('#showPrizes').checked,helpEnabled:$('#helpEnabled').checked});
+        activities[0] = activity;
+        $('#activityFormAlert').innerHTML = '';
+        toast('活动配置保存成功','success');
+      }
+
+      function readPrizeConfigTable() {
+        const draft = [];
+        $$('#prizeConfigTable tbody tr').forEach(row => {
+          const old = prizeConfigs.find(item=>item.id===row.dataset.configId);
+          draft.push({
+            ...old,
+            label:$('[data-field="label"]',row).value.trim(),
+            qty:Number($('[data-field="qty"]',row).value),
+            probability:Number($('[data-field="probability"]',row).value),
+            release:$$('[data-release-index]',row).map(input=>Number(input.value))
+          });
+        });
+        return draft;
+      }
+
+      function validateAndSavePrizeConfig() {
+        const draft = readPrizeConfigTable();
+        const errors = [];
+        draft.forEach(item => {
+          const prize = prizeById(item.prizeId);
+          if (!item.label) errors.push(`${prize.name}的奖项名称不能为空`);
+          if (!Number.isInteger(item.qty) || item.qty < 1) errors.push(`${prize.name}的配置数量不正确`);
+          if (item.qty > prize.total) errors.push(`${prize.name}配置数量超过总库存${prize.total}`);
+          if (item.probability < 0 || item.probability > 100) errors.push(`${prize.name}的中奖概率应在0—100之间`);
+          if (item.release.some(value=>!Number.isInteger(value)||value<0)) errors.push(`${prize.name}的分日数量必须为非负整数`);
+          if (sum(item.release) !== item.qty) errors.push(`${prize.name}的分日释放合计必须等于配置数量${item.qty}`);
+        });
+        if (sum(draft.map(i=>i.probability)) > 100) errors.push('全部奖品中奖概率之和不能超过100%');
+        if (errors.length) {
+          $('#prizeConfigAlert').innerHTML = `<div class="form-alert error"><b>无法保存：</b>${errors.slice(0,5).join('；')}${errors.length>5?'；请继续检查其他奖品配置':''}</div>`;
+          $('#prizeConfigAlert').scrollIntoView({behavior:'smooth',block:'center'});
+          return;
+        }
+        draft.forEach((item,index)=>Object.assign(prizeConfigs[index],item));
+        $('#prizeConfigAlert').innerHTML = '';
+        toast('奖品数量、概率和分日释放配置保存成功','success');
+        renderActivityDetail();
+      }
+
+      function updateProbabilityPreview() {
+        const table = $('#prizeConfigTable');
+        if (!table) return;
+        const prob = sum($$('.probability-input',table).map(input=>Number(input.value)||0));
+        $('#probabilityTotal').textContent = `${prob.toFixed(2)}%`;
+        $('#missProbability').textContent = `${Math.max(0,100-prob).toFixed(2)}%`;
+        $$('tbody tr',table).forEach(row=>{
+          const qty = Number($('[data-field="qty"]',row).value)||0;
+          const releaseTotal = sum($$('.release-input',row).map(input=>Number(input.value)||0));
+          const el = $('.release-total',row);
+          el.textContent = `${releaseTotal} / ${qty}`;
+          el.className = `release-total ${releaseTotal===qty?'ok':'bad'}`;
+        });
+      }
+
+      function filterActivities() {
+        const keyword = ($('#activitySearch')?.value || '').trim().toLowerCase();
+        const status = $('#activityStatusFilter')?.value || 'all';
+        const result = activities.filter(item => (!keyword || item.name.toLowerCase().includes(keyword)) && (status==='all'||item.status===status));
+        $('#activityTableBody').innerHTML = activityRows(result);
+      }
+
+      function filterParticipants() {
+        const keyword = ($('#participantSearch')?.value || '').trim().toLowerCase();
+        const filter = $('#participantFilter')?.value || 'all';
+        const result = participants.filter(item => (!keyword || item.nickname.toLowerCase().includes(keyword) || item.phone.includes(keyword)) && (filter==='all'||(filter==='helped'&&item.helps>0)||(filter==='won'&&item.winDays>0)));
+        $('#participantTableBody').innerHTML = participantRows(result);
+      }
+
+      function filterWinners() {
+        const keyword = ($('#winnerSearch')?.value || '').trim().toLowerCase();
+        const status = $('#winnerStatusFilter')?.value || 'all';
+        const result = winners.filter(item => (!keyword || item.nickname.toLowerCase().includes(keyword) || item.realName.includes(keyword) || item.phone.includes(keyword)) && (status==='all'||item.status===status));
+        $('#winnerTableBody').innerHTML = winnerRows(result);
+      }
+
+      function filterPrizes() {
+        const keyword = ($('#prizeSearch')?.value || '').trim().toLowerCase();
+        $('#prizeTableBody').innerHTML = prizeRows(prizes.filter(item=>!keyword||item.name.toLowerCase().includes(keyword)));
+      }
+
+      function openNewActivity() {
+        openModal(`<div class="modal-header"><h3>新增抽奖活动</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="newActivityForm" novalidate><div class="modal-body"><div id="newActivityAlert"></div><div class="form-grid">${field('活动主题','newActivityName','',true)}${field('活动副标题','newActivitySubtitle','',true)}${field('开始时间','newActivityStart','2026-08-03T00:00',true,'datetime-local')}${field('结束时间','newActivityEnd','2026-08-07T23:59',true,'datetime-local')}<div class="field"><label class="required">抽奖模板</label><select id="newActivityTemplate"><option>老虎机</option><option>大转盘</option><option>刮刮卡</option></select></div><div class="field"><label>基础抽奖机会</label><input value="3" readonly><div class="field-help">创建后可在活动配置中调整。</div></div></div><div class="form-alert info" style="margin:16px 0 0">活动创建成功后，继续进入详情配置奖品、概率、分日释放和活动规则。</div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">创建并进入配置</button></div></form>`);
+      }
+
+      function submitNewActivity() {
+        const name = $('#newActivityName').value.trim();
+        const subtitle = $('#newActivitySubtitle').value.trim();
+        const start = $('#newActivityStart').value;
+        const end = $('#newActivityEnd').value;
+        const errors=[];
+        if(!name) errors.push('活动主题不能为空');
+        if(!subtitle) errors.push('活动副标题不能为空');
+        if(!start||!end||new Date(start)>=new Date(end)) errors.push('结束时间必须晚于开始时间');
+        if(errors.length){ $('#newActivityAlert').innerHTML=`<div class="form-alert error" style="margin:0 0 16px">${errors.join('；')}</div>`; return; }
+        closeModal(); toast('活动创建成功，已生成小程序页面地址','success');
+        ui.view='activityDetail'; ui.activityTab='basic'; render();
+      }
+
+      function openAddPrize() {
+        const available = prizes.filter(prize=>!prizeConfigs.some(config=>config.prizeId===prize.id));
+        if(!available.length){ toast('奖品库中没有可继续添加的奖品','error'); return; }
+        openModal(`<div class="modal-header"><h3>新增活动奖品</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="addPrizeForm" novalidate><div class="modal-body"><div id="addPrizeAlert"></div><div class="form-grid"><div class="field full"><label class="required">选择奖品</label><select id="addPrizeId">${available.map(p=>`<option value="${p.id}">${p.name}（可分配 ${p.total-p.occupied}）</option>`).join('')}</select></div>${field('奖项名称','addPrizeLabel','纪念奖',true)}${field('配置数量','addPrizeQty',1,true,'number')}${field('中奖概率（%）','addPrizeProbability',1,true,'number')}<div class="field full"><label class="required">8月3日至7日分日新增库存</label><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">${dates.map((d,i)=>`<div><div class="field-help" style="margin:0 0 4px">${d}</div><input class="add-release" type="number" min="0" value="${i===0?1:0}"></div>`).join('')}</div></div></div><div class="field-help" style="margin-top:12px">分日释放合计必须等于配置数量；前日剩余库存自动保留。</div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">确认添加</button></div></form>`);
+      }
+
+      function submitAddPrize() {
+        const prizeId=$('#addPrizeId').value;
+        const prize=prizeById(prizeId);
+        const qty=Number($('#addPrizeQty').value);
+        const probability=Number($('#addPrizeProbability').value);
+        const release=$$('.add-release').map(i=>Number(i.value));
+        const label=$('#addPrizeLabel').value.trim();
+        const errors=[];
+        if(!label) errors.push('奖项名称不能为空');
+        if(!Number.isInteger(qty)||qty<1) errors.push('配置数量必须为大于0的整数');
+        if(qty>prize.total-prize.occupied) errors.push(`配置数量超过可分配库存${prize.total-prize.occupied}`);
+        if(probability<0||probability>100) errors.push('中奖概率应在0—100之间');
+        if(release.some(v=>!Number.isInteger(v)||v<0)||sum(release)!==qty) errors.push('分日释放合计必须等于配置数量');
+        if(totalProbability()+probability>100) errors.push('加入后总中奖概率超过100%');
+        if(errors.length){ $('#addPrizeAlert').innerHTML=`<div class="form-alert error" style="margin:0 0 16px">${errors.join('；')}</div>`; return; }
+        prizeConfigs.push({id:`C${String(prizeConfigs.length+1).padStart(3,'0')}`,prizeId,label,qty,probability,release,won:0,remaining:qty});
+        prize.occupied+=qty; prize.activities+=1;
+        closeModal(); renderActivityDetail(); toast('活动奖品添加成功','success');
+      }
+
+      function openParticipantDetail(id) {
+        const item=participants.find(i=>i.id===id);
+        openModal(`<div class="modal-header"><h3>参与记录详情</h3><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><dl class="detail-list"><dt>用户昵称</dt><dd>${item.nickname}</dd><dt>脱敏手机号</dt><dd>${item.phone}</dd><dt>基础机会</dt><dd>${item.base}次</dd><dt>有效助力</dt><dd>${item.helps}人，增加${Math.floor(item.helps/activity.helpsPerChance)}次机会</dd><dt>累计机会</dt><dd>${item.total}次</dd><dt>已抽/剩余</dt><dd>${item.used}次 / ${Math.max(0,item.total-item.used)}次</dd><dt>中奖天数</dt><dd>${item.winDays}天</dd><dt>最后参与时间</dt><dd>${item.last}</dd></dl><div class="form-alert info" style="margin:16px 0 0">本页仅展示可核对的业务统计，不提供人工增减抽奖机会，避免扩大后台权限。</div></div><div class="modal-footer"><button class="btn primary" data-action="close-modal">关闭</button></div>`, 'small');
+      }
+
+      function openWinnerDetail(id) {
+        const item=winners.find(i=>i.id===id);
+        const canContact=item.status==='waitingContact';
+        const canClaim=item.status==='waitingClaim';
+        const unreachable=item.status==='unreachable';
+        openModal(`<div class="modal-header"><h3>中奖记录详情</h3><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><dl class="detail-list"><dt>中奖记录</dt><dd>${item.id}　${winStatusTag(item.status)}</dd><dt>微信昵称</dt><dd>${item.nickname}</dd><dt>中奖人姓名</dt><dd>${item.realName||'用户尚未填写'}</dd><dt>手机号码</dt><dd>${item.phone||'用户尚未填写'}</dd><dt>中奖奖品</dt><dd>${item.prize}</dd><dt>中奖时间</dt><dd>${item.time}</dd><dt>联系结果</dt><dd>${item.contact}</dd><dt>核销结果</dt><dd>${item.claim}</dd></dl>${item.status==='waitingInfo'?`<div class="form-alert info" style="margin:16px 0 0">用户尚未提交真实姓名和手机号，暂不能进行电话联系或领奖核销。</div>`:''}</div><div class="modal-footer"><button class="btn" data-action="close-modal">关闭</button>${canContact?`<button class="btn danger" data-action="mark-unreachable" data-id="${item.id}">记录联系不上</button><button class="btn primary" data-action="mark-contacted" data-id="${item.id}">标记已联系</button>`:''}${unreachable?`<button class="btn primary" data-action="restore-contact" data-id="${item.id}">恢复为待联系</button>`:''}${canClaim?`<button class="btn primary" data-action="open-claim" data-id="${item.id}">核销领奖</button>`:''}</div>`, 'small');
+      }
+
+      function openClaim(id) {
+        const item=winners.find(i=>i.id===id);
+        openModal(`<div class="modal-header"><h3>核销领奖</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="claimForm" data-id="${item.id}" novalidate><div class="modal-body"><div id="claimAlert"></div><dl class="detail-list"><dt>中奖人</dt><dd>${item.realName}</dd><dt>手机号码</dt><dd>${item.phone}</dd><dt>奖品</dt><dd>${item.prize}</dd></dl><div class="divider"></div><label class="check-row"><input type="checkbox" id="checkIdOriginal"><span>已查看中奖人本人身份证原件，不接受照片、复印件或他人代领。</span></label><label class="check-row"><input type="checkbox" id="checkNameMatch"><span>身份证姓名与中奖登记姓名“${item.realName}”一致。</span></label><div class="field" style="margin-top:14px"><label>核销备注（选填）</label><textarea id="claimNote" placeholder="可填写奖品交付情况或异常说明"></textarea></div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">确认核销</button></div></form>`, 'small');
+      }
+
+      function submitClaim(form) {
+        if(!$('#checkIdOriginal').checked||!$('#checkNameMatch').checked){ $('#claimAlert').innerHTML='<div class="form-alert error" style="margin:0 0 14px">请完成身份证原件和姓名一致性核对后再核销。</div>'; return; }
+        const item=winners.find(i=>i.id===form.dataset.id);
+        item.status='claimed'; item.claim='已核销';
+        closeModal(); renderActivityDetail(); toast('领奖核销成功，状态已更新','success');
+      }
+
+      function openNewPrize() {
+        openModal(`<div class="modal-header"><h3>新增奖品</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="newPrizeForm" novalidate><div class="modal-body"><div id="newPrizeAlert"></div><div class="form-grid">${field('奖品名称','newPrizeName','',true)}${field('总库存','newPrizeTotal',1,true,'number')}<div class="field full"><label class="required">奖品说明</label><textarea id="newPrizeDescription" placeholder="填写规格、领取方式等必要说明"></textarea></div></div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">保存奖品</button></div></form>`, 'small');
+      }
+
+      function submitNewPrize() {
+        const name=$('#newPrizeName').value.trim(); const total=Number($('#newPrizeTotal').value); const description=$('#newPrizeDescription').value.trim(); const errors=[];
+        if(!name) errors.push('奖品名称不能为空'); if(!Number.isInteger(total)||total<1) errors.push('总库存必须为大于0的整数'); if(!description) errors.push('奖品说明不能为空');
+        if(errors.length){ $('#newPrizeAlert').innerHTML=`<div class="form-alert error" style="margin:0 0 14px">${errors.join('；')}</div>`; return; }
+        prizes.push({id:`P${String(prizes.length+1).padStart(3,'0')}`,name,total,occupied:0,description,activities:0}); closeModal(); renderPrizeList(); toast('奖品新增成功','success');
+      }
+
+      function savePrizeForm() {
+        const prize=prizeById(ui.selectedPrize); const name=$('#prizeName').value.trim(); const total=Number($('#prizeTotal').value); const description=$('#prizeDescription').value.trim(); const errors=[];
+        if(!name) errors.push('奖品名称不能为空'); if(!Number.isInteger(total)||total<prize.occupied) errors.push(`总库存不能小于已占用数量${prize.occupied}`); if(!description) errors.push('奖品说明不能为空');
+        if(errors.length){ $('#prizeFormAlert').innerHTML=`<div class="form-alert error">${errors.join('；')}</div>`; return; }
+        Object.assign(prize,{name,total,description}); $('#prizeFormAlert').innerHTML=''; toast('奖品信息保存成功','success'); renderPrizeDetail();
+      }
+
+      function confirmPause() {
+        openModal(`<div class="modal-body"><div class="confirm-icon">Ⅱ</div><h3 class="confirm-title">确认暂停活动？</h3><p class="confirm-desc">暂停后，小程序将提示“活动暂时暂停”，用户不能抽奖或助力；已有抽奖机会和中奖记录不会改变。</p></div><div class="modal-footer"><button class="btn" data-action="close-modal">取消</button><button class="btn warning" data-action="confirm-pause">确认暂停</button></div>`, 'small');
+      }
+
+      document.addEventListener('click', event => {
+        const nav=event.target.closest('[data-nav]');
+        if(nav){ ui.view=nav.dataset.nav; ui.activityTab='overview'; render(); return; }
+        const tab=event.target.closest('[data-activity-tab]');
+        if(tab){ ui.activityTab=tab.dataset.activityTab; renderActivityDetail(); return; }
+        const el=event.target.closest('[data-action]');
+        if(!el) return;
+        const action=el.dataset.action;
+        if(action==='account') toast('账号菜单：孝感市运营账号');
+        if(action==='toggle-sidebar'){ $('#sidebar').classList.toggle('collapsed'); $('#main').classList.toggle('expanded'); }
+        if(action==='close-modal') closeModal();
+        if(action==='new-activity') openNewActivity();
+        if(action==='view-activity') { if(el.dataset.id!==activity.id){ toast('历史活动在本次原型中仅展示列表'); return; } ui.view='activityDetail'; ui.activityTab='overview'; render(); }
+        if(action==='back-activities'){ ui.view='activities'; render(); }
+        if(action==='copy-link'){ navigator.clipboard?.writeText(activity.pagePath).catch(()=>{}); toast('小程序页面地址已复制','success'); }
+        if(action==='export-winners') toast('中奖名单已生成，开始导出 Excel','success');
+        if(action==='export-participants') toast('参与及助力记录已生成，开始导出 Excel','success');
+        if(action==='pause-activity') confirmPause();
+        if(action==='confirm-pause'){ activity.status='paused'; activities[0]=activity; closeModal(); renderActivityDetail(); toast('活动已暂停','success'); }
+        if(action==='resume-activity'){ activity.status='active'; activities[0]=activity; renderActivityDetail(); toast('活动已恢复进行','success'); }
+        if(action==='change-cover') toast('已打开图片选择器；取消选择时保留原封面');
+        if(action==='reset-basic') { renderActivityDetail(); toast('已恢复为当前已保存配置'); }
+        if(action==='add-activity-prize') openAddPrize();
+        if(action==='save-prize-config') validateAndSavePrizeConfig();
+        if(action==='reset-prize-config') { renderActivityDetail(); toast('已恢复为当前已保存奖品配置'); }
+        if(action==='remove-activity-prize') {
+          const config=prizeConfigs.find(i=>i.id===el.dataset.configId);
+          if(config.won>0){ toast('该奖品已有中奖记录，不能从活动中移除','error'); return; }
+          openModal(`<div class="modal-body"><div class="confirm-icon">!</div><h3 class="confirm-title">确认移除活动奖品？</h3><p class="confirm-desc">移除后，未中奖库存将释放回全局奖品库。该操作仅允许在没有中奖记录时执行。</p></div><div class="modal-footer"><button class="btn" data-action="close-modal">取消</button><button class="btn danger" data-action="confirm-remove-prize" data-config-id="${config.id}">确认移除</button></div>`, 'small');
+        }
+        if(action==='confirm-remove-prize'){
+          const index=prizeConfigs.findIndex(i=>i.id===el.dataset.configId); const config=prizeConfigs[index]; const prize=prizeById(config.prizeId); prize.occupied-=config.qty; prize.activities=Math.max(0,prize.activities-1); prizeConfigs.splice(index,1); closeModal(); renderActivityDetail(); toast('活动奖品已移除，库存已释放','success');
+        }
+        if(action==='participant-detail') openParticipantDetail(el.dataset.id);
+        if(action==='winner-detail') openWinnerDetail(el.dataset.id);
+        if(action==='mark-contacted'){ const item=winners.find(i=>i.id===el.dataset.id); item.status='waitingClaim'; item.contact='已联系'; closeModal(); renderActivityDetail(); toast('已标记为联系成功，等待现场核销','success'); }
+        if(action==='mark-unreachable'){ const item=winners.find(i=>i.id===el.dataset.id); item.status='unreachable'; item.contact='联系不上'; closeModal(); renderActivityDetail(); toast('已记录联系不上，可稍后恢复并继续联系'); }
+        if(action==='restore-contact'){ const item=winners.find(i=>i.id===el.dataset.id); item.status='waitingContact'; item.contact='未联系'; closeModal(); renderActivityDetail(); toast('已恢复为待联系状态','success'); }
+        if(action==='open-claim') openClaim(el.dataset.id);
+        if(action==='new-prize') openNewPrize();
+        if(action==='view-prize'){ ui.selectedPrize=el.dataset.id; ui.view='prizeDetail'; render(); }
+        if(action==='back-prizes'){ ui.view='prizes'; render(); }
+        if(action==='refresh-activities') toast('活动列表已刷新');
+        if(action==='refresh-prizes') toast('奖品列表已刷新');
+      });
+
+      document.addEventListener('input', event => {
+        if(event.target.id==='activitySearch') filterActivities();
+        if(event.target.id==='participantSearch') filterParticipants();
+        if(event.target.id==='winnerSearch') filterWinners();
+        if(event.target.id==='prizeSearch') filterPrizes();
+        if(event.target.closest('#prizeConfigTable')) updateProbabilityPreview();
+      });
+      document.addEventListener('change', event => {
+        if(event.target.id==='activityStatusFilter') filterActivities();
+        if(event.target.id==='participantFilter') filterParticipants();
+        if(event.target.id==='winnerStatusFilter') filterWinners();
+        if(event.target.closest('#prizeConfigTable')) updateProbabilityPreview();
+      });
+      document.addEventListener('submit', event => {
+        event.preventDefault();
+        if(event.target.id==='activityForm') saveActivityForm();
+        if(event.target.id==='newActivityForm') submitNewActivity();
+        if(event.target.id==='addPrizeForm') submitAddPrize();
+        if(event.target.id==='claimForm') submitClaim(event.target);
+        if(event.target.id==='newPrizeForm') submitNewPrize();
+        if(event.target.id==='prizeForm') savePrizeForm();
+      });
+      $('#modalLayer').addEventListener('click', event => { if(event.target===$('#modalLayer')) closeModal(); });
+
+      function sum(values){ return values.reduce((a,b)=>a+(Number(b)||0),0); }
+      function totalProbability(){ return sum(prizeConfigs.map(i=>i.probability)); }
+      function formatNumber(value){ return Number(value).toLocaleString('zh-CN'); }
+      function fmtDate(value){ return value.replace('T',' ').slice(0,16); }
+      function fmtDateTime(value){ return value.replace('T',' '); }
+      function maskPhone(value){ return `${value.slice(0,3)}****${value.slice(-4)}`; }
+
+      render();
+    })();
+  </script>
+</body>
+</html>
