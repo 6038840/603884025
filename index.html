@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f6f8fb" />
-  <title>湖北省住房供应链｜抽奖活动管理 2.0 原型</title>
+  <title>湖北省住房供应链｜抽奖活动管理 3.0 原型</title>
   <style>
     :root {
       --primary: #1677ff;
@@ -344,6 +344,161 @@
     .form-alert { margin: 16px 20px 0; padding: 10px 12px; border-radius: 7px; font-size: 11px; line-height: 1.55; }
     .form-alert.error { color: #b83530; background: #fff0ee; border: 1px solid #f3c4c0; }
     .form-alert.info { color: #2e669e; background: #edf6ff; border: 1px solid #c9e2fb; }
+    .form-alert.success { color: #18724e; background: #ebf9f2; border: 1px solid #c4ead8; }
+
+    .media-config {
+      display: grid;
+      grid-template-columns: 118px 1fr;
+      gap: 13px;
+      align-items: center;
+      min-height: 86px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fafbfd;
+    }
+    .media-thumb {
+      position: relative;
+      height: 64px;
+      overflow: hidden;
+      border-radius: 8px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 74% 28%, rgba(255,238,121,.55), transparent 24%),
+        linear-gradient(135deg,#ef4437,#ff943f);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+    }
+    .media-thumb.supply {
+      background:
+        radial-gradient(circle at 74% 28%, rgba(221,255,179,.48), transparent 24%),
+        linear-gradient(135deg,#128d78,#45bd82);
+    }
+    .media-thumb.share::after {
+      content: "分享卡片";
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      padding: 2px 5px;
+      border-radius: 8px;
+      background: rgba(0,0,0,.18);
+      font-size: 8px;
+    }
+    .media-thumb span {
+      position: absolute;
+      left: 9px;
+      bottom: 9px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .media-meta strong { display: block; color: #39414b; font-size: 11px; }
+    .media-meta p { margin: 5px 0 8px; color: #939ca8; font-size: 9px; line-height: 1.45; }
+    .media-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+
+    .compact-textarea { min-height: 74px !important; }
+    .readonly-box {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      color: #606a77;
+      background: #f7f8fa;
+      font-size: 11px;
+    }
+    .readonly-box .status { margin-left: auto; }
+
+    .sub-tabs {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f6f8fb;
+    }
+    .sub-tab {
+      min-height: 31px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 6px;
+      color: #697381;
+      background: transparent;
+      font-size: 11px;
+    }
+    .sub-tab.active {
+      color: var(--primary);
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(49,76,108,.08);
+      font-weight: 700;
+    }
+    .daily-probability-summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(104px, 1fr));
+      gap: 8px;
+      width: 100%;
+      margin-bottom: 14px;
+    }
+    .day-probability-card {
+      padding: 10px 11px;
+      border: 1px solid #d8e7f8;
+      border-radius: 8px;
+      background: #f6faff;
+    }
+    .day-probability-card span { display: block; color: #728299; font-size: 9px; }
+    .day-probability-card b { display: block; margin-top: 5px; color: var(--primary); font-size: 16px; }
+    .day-probability-card small { display: block; margin-top: 3px; color: #9aa5b2; font-size: 8px; }
+    .probability-cell { min-width: 84px; text-align: center; }
+    .probability-cell .inline-input { width: 68px; }
+    .daily-input-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+    .daily-input-grid .field-help { margin: 0 0 4px; text-align: center; }
+
+    .preview-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+    .phone-preview {
+      overflow: hidden;
+      border: 8px solid #20242a;
+      border-radius: 28px;
+      background: #fff4df;
+      box-shadow: 0 18px 36px rgba(37,51,69,.16);
+    }
+    .phone-preview-bar { padding: 10px; color: #fff; background: #e94b38; text-align: center; font-size: 10px; font-weight: 700; }
+    .phone-preview-hero {
+      min-height: 178px;
+      padding: 27px 17px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 72% 70%, rgba(255,238,105,.55), transparent 27%),
+        linear-gradient(145deg,#ed4436,#ff973f);
+      text-align: center;
+    }
+    .phone-preview-hero.supply { background: linear-gradient(145deg,#128d78,#45bd82); }
+    .phone-preview-hero small { font-size: 9px; opacity: .88; }
+    .phone-preview-hero h3 { margin: 9px 0 6px; font-size: 22px; }
+    .phone-preview-hero p { margin: 0; font-size: 10px; }
+    .phone-preview-body { padding: 13px; }
+    .phone-preview-card { margin-bottom: 9px; padding: 11px; border-radius: 10px; background: #fff; box-shadow: 0 6px 16px rgba(118,76,40,.08); font-size: 9px; line-height: 1.6; }
+    .preview-copy h4 { margin: 0 0 8px; color: #2d333b; font-size: 15px; }
+    .preview-copy p { margin: 0 0 12px; color: #6f7986; font-size: 11px; line-height: 1.65; }
+    .preview-list { display: grid; gap: 8px; }
+    .preview-list div { padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 10px; }
+
+    .share-preview-card {
+      position: relative;
+      min-height: 220px;
+      padding: 23px;
+      overflow: hidden;
+      border-radius: 13px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 84% 20%, rgba(255,239,121,.45), transparent 24%),
+        linear-gradient(135deg,#ef4537,#ff903c);
+      box-shadow: 0 16px 34px rgba(59,75,94,.16);
+    }
+    .share-preview-card.supply { background: linear-gradient(135deg,#128d78,#45bd82); }
+    .share-preview-card::after { content: "🎁"; position: absolute; right: 23px; bottom: 17px; font-size: 72px; }
+    .share-preview-card small { opacity: .84; font-weight: 700; }
+    .share-preview-card h3 { width: 70%; margin: 10px 0 7px; font-size: 25px; line-height: 1.25; }
+    .share-preview-card p { width: 68%; margin: 0; font-size: 11px; line-height: 1.6; }
 
     .probability-summary {
       display: flex;
@@ -486,14 +641,25 @@
         start: '2026-08-03T00:00',
         end: '2026-08-07T23:59',
         pagePath: '/pages/lottery/index?id=act_20260803_xgyj',
-        coverName: '悦鉴山月抽奖封面.png',
+        coverName: '悦鉴山月抽奖主题图.png',
+        themeStyle: 'mountain',
+        introduction: '“望度山月·仰望”夏日幸运大抽奖面向项目业主、客户及孝感广大人民群众开放。参与者登录湖北省住房供应链小程序即可抽奖，邀请好友完成有效助力还可增加抽奖机会。',
+        disclaimer: '本活动奖品图片仅作展示，实物以现场发放为准。活动参与及抽奖均不收取费用；各奖品中奖概率按活动日分别配置，随机抽取不代表或承诺奖品一定抽出。因用户填写信息不实、逾期未配合核验等原因造成无法领奖的，按活动公示规则处理。',
+        shareCoverName: '悦鉴山月微信分享图.png',
+        shareStyle: 'mountain',
+        shareTitle: '帮我助力，赢夏日好礼',
+        sharePromotion: '望度山月·仰望｜理想生活与夏日幸运，一起抵达',
+        shareLandingPath: '/pages/lottery/assist?id=act_20260803_xgyj',
+        assistJumpEnabled: true,
+        assistJumpPath: '/pages/home/index',
+        assistJumpButtonText: '进入住房供应链首页',
         showPrizes: true,
         baseChances: 3,
         helpEnabled: true,
         helpsPerChance: 2,
         helperDailyLimit: 1,
         dailyWinLimit: 1,
-        rules: '8月3日至7日为线上抽奖时间，8月8日至9日为线下领奖时间。每个账号首次获得3次抽奖机会；每2名有效好友助力增加1次机会，增加次数不设上限；每名好友每天只能助力1次。每个账号可以多次中奖，但每天最多中奖1次。奖品分日释放，未抽完的已释放库存自动保留至后续活动日。中奖后须填写真实姓名和手机号，凭本人身份证原件核销领奖。',
+        rules: '8月3日至7日为线上抽奖时间，8月8日至9日为线下领奖时间。每个账号首次获得3次抽奖机会；每2名有效好友助力增加1次机会，增加次数不设上限；每名好友每天只能助力1次。每个账号可以多次中奖，但每天最多中奖1次。各奖品可按活动日分别配置中奖概率，0%表示当天不会抽中；大于0%只代表具备中奖可能，不支持或承诺“保证一定抽出”。中奖后须填写真实姓名和手机号，凭本人身份证原件核销领奖。',
         metrics: { participants: 1286, draws: 3862, winners: 42, remaining: 39, helps: 2034 }
       };
 
@@ -516,14 +682,14 @@
       ];
 
       const prizeConfigs = [
-        { id:'C001', prizeId:'P001', label:'特别奖', qty:1, probability:.01, release:[0,0,0,0,1], won:0, remaining:1 },
-        { id:'C002', prizeId:'P002', label:'幸运奖', qty:1, probability:.03, release:[1,0,0,0,0], won:1, remaining:0 },
-        { id:'C003', prizeId:'P003', label:'幸运奖', qty:1, probability:.03, release:[0,1,0,0,0], won:0, remaining:1 },
-        { id:'C004', prizeId:'P004', label:'幸运奖', qty:1, probability:.03, release:[0,0,1,0,0], won:0, remaining:1 },
-        { id:'C005', prizeId:'P005', label:'幸运奖', qty:1, probability:.03, release:[0,0,0,1,0], won:0, remaining:1 },
-        { id:'C006', prizeId:'P006', label:'幸运奖', qty:1, probability:.03, release:[0,0,0,0,1], won:1, remaining:0 },
-        { id:'C007', prizeId:'P007', label:'幸运奖', qty:20, probability:1.5, release:[4,4,4,4,4], won:8, remaining:12 },
-        { id:'C008', prizeId:'P008', label:'纪念奖', qty:50, probability:5, release:[10,10,10,10,10], won:24, remaining:26 }
+        { id:'C001', prizeId:'P001', label:'特别奖', qty:1, probabilities:[0,0,0,0,.5], release:[0,0,0,0,1], won:0, remaining:1 },
+        { id:'C002', prizeId:'P002', label:'幸运奖', qty:1, probabilities:[.3,.16,.16,.16,.2], release:[1,0,0,0,0], won:1, remaining:0 },
+        { id:'C003', prizeId:'P003', label:'幸运奖', qty:1, probabilities:[.3,.16,.16,.16,.2], release:[0,1,0,0,0], won:0, remaining:1 },
+        { id:'C004', prizeId:'P004', label:'幸运奖', qty:1, probabilities:[.3,.16,.16,.16,.2], release:[0,0,1,0,0], won:0, remaining:1 },
+        { id:'C005', prizeId:'P005', label:'幸运奖', qty:1, probabilities:[.3,.16,.16,.16,.2], release:[0,0,0,1,0], won:0, remaining:1 },
+        { id:'C006', prizeId:'P006', label:'幸运奖', qty:1, probabilities:[.3,.16,.16,.16,.2], release:[0,0,0,0,1], won:1, remaining:0 },
+        { id:'C007', prizeId:'P007', label:'幸运奖', qty:20, probabilities:[4,2,1.5,2,4], release:[4,4,4,4,4], won:8, remaining:12 },
+        { id:'C008', prizeId:'P008', label:'纪念奖', qty:50, probabilities:[8,4,3,5,10], release:[10,10,10,10,10], won:24, remaining:26 }
       ];
 
       const participants = [
@@ -542,7 +708,7 @@
         { id:'W005', nickname:'林静', realName:'林静', phone:'15387657808', prize:'九阳0氟电饭煲4L', time:'2026-08-03 10:29', status:'claimed', contact:'已联系', claim:'已核销' }
       ];
 
-      const ui = { view:'activities', activityTab:'overview', selectedPrize:'P001', toastTimer:null };
+      const ui = { view:'activities', activityTab:'overview', prizeConfigMode:'probability', selectedPrize:'P001', toastTimer:null };
 
       const prizeById = id => prizes.find(item => item.id === id);
       const activityStatus = {
@@ -664,15 +830,16 @@
       }
 
       function overviewTab() {
-        const prob = totalProbability();
+        const totals = dailyProbabilityTotals();
         return `<div class="card-body">
           <div class="detail-grid">
             <div class="detail-block"><h3>活动基础信息</h3><div class="kv-grid"><div class="kv-label">线上抽奖时间</div><div class="kv-value">${fmtDateTime(activity.start)} — ${fmtDateTime(activity.end)}</div><div class="kv-label">抽奖模板</div><div class="kv-value">${activity.template}</div><div class="kv-label">页面地址</div><div class="kv-value">${activity.pagePath}</div><div class="kv-label">奖品橱窗</div><div class="kv-value">${activity.showPrizes?'展示':'不展示'}</div></div></div>
             <div class="detail-block"><h3>参与与中奖规则</h3><div class="kv-grid"><div class="kv-label">基础机会</div><div class="kv-value">每个账号 ${activity.baseChances} 次</div><div class="kv-label">好友助力</div><div class="kv-value">每 ${activity.helpsPerChance} 名有效好友 +1次，不设上限</div><div class="kv-label">好友日上限</div><div class="kv-value">每名好友每天 ${activity.helperDailyLimit} 次</div><div class="kv-label">中奖上限</div><div class="kv-value">每账号每天 ${activity.dailyWinLimit} 次，可跨日多次中奖</div></div></div>
-            <div class="detail-block"><h3>奖品与概率</h3><div class="kv-grid"><div class="kv-label">活动奖品</div><div class="kv-value">${prizeConfigs.length} 种，共 ${sum(prizeConfigs.map(i=>i.qty))} 份</div><div class="kv-label">总中奖概率</div><div class="kv-value">${prob.toFixed(2)}%</div><div class="kv-label">未中奖概率</div><div class="kv-value">${(100-prob).toFixed(2)}%</div><div class="kv-label">释放方式</div><div class="kv-value">按8月3日至7日分日新增可抽库存，前日剩余自动保留</div></div></div>
+            <div class="detail-block"><h3>奖品与概率</h3><div class="kv-grid"><div class="kv-label">活动奖品</div><div class="kv-value">${prizeConfigs.length} 种，共 ${sum(prizeConfigs.map(i=>i.qty))} 份</div><div class="kv-label">概率模式</div><div class="kv-value">按活动日 × 奖品分别配置</div><div class="kv-label">每日总概率</div><div class="kv-value">${totals.map((value,index)=>`${dates[index]} ${formatPercent(value)}`).join('　')}</div><div class="kv-label">抽出保证</div><div class="kv-value">不支持“保证一定抽出”</div><div class="kv-label">库存方式</div><div class="kv-value">按日新增可抽库存，前日剩余自动保留</div></div></div>
             <div class="detail-block"><h3>中奖处理</h3><div class="kv-grid"><div class="kv-label">中奖登记</div><div class="kv-value">用户填写真实姓名、手机号码</div><div class="kv-label">工作人员联系</div><div class="kv-value">后台记录已联系或联系不上</div><div class="kv-label">现场核销</div><div class="kv-value">核对中奖人本人身份证原件后操作核销</div><div class="kv-label">未发完奖品</div><div class="kv-value">活动结束后不补抽，剩余库存释放回奖品库</div></div></div>
+            <div class="detail-block"><h3>页面内容与分享</h3><div class="kv-grid"><div class="kv-label">顶部主题图</div><div class="kv-value">${activity.coverName}</div><div class="kv-label">说明内容</div><div class="kv-value">活动介绍、活动规则、免责声明均已配置</div><div class="kv-label">分享卡片</div><div class="kv-value">${activity.shareTitle}</div><div class="kv-label">分享落地页</div><div class="kv-value">好友助力页</div><div class="kv-label">助力成功去向</div><div class="kv-value">${activity.assistJumpEnabled?`同一小程序内跳转至 ${activity.assistJumpPath}`:'不展示跳转入口'}</div></div></div>
           </div>
-          <div class="form-alert info">本活动沿用1.0即时开奖和活动库存逻辑；2.0仅增加动态机会、每日中奖限制、分日释放和中奖核销状态。</div>
+          <div class="form-alert info">3.0仅在2.0基础上增加可配置主题/文字、宣传型分享、助力成功后的同小程序跳转，以及按天按奖品概率；活动列表、即时开奖、库存和中奖核销流程保持不变。</div>
         </div>`;
       }
 
@@ -683,12 +850,16 @@
             ${field('活动主题','activityName',activity.name,true)}
             ${field('活动副标题','activitySubtitle',activity.subtitle,true)}
             ${field('小程序页面地址','activityPath',activity.pagePath,false,'text',true,'创建活动后自动生成，无须人工修改')}
-            <div class="field"><label>活动封面</label><div class="switch-row"><span id="coverName">${activity.coverName}</span><button class="btn small" type="button" data-action="change-cover">更换封面</button></div><div class="field-help">支持 JPG / PNG / WEBP，不超过2MB，建议尺寸750×400。</div></div>
             ${field('开始时间','activityStart',activity.start,true,'datetime-local')}
             ${field('结束时间','activityEnd',activity.end,true,'datetime-local')}
             <div class="field"><label class="required">抽奖模板</label><select id="activityTemplate"><option ${activity.template==='老虎机'?'selected':''}>老虎机</option><option ${activity.template==='大转盘'?'selected':''}>大转盘</option><option>刮刮卡</option></select><div class="field-help">活动进行中后不可修改。</div></div>
             <div class="field"><label>奖品橱窗</label><div class="switch-row"><label class="switch"><input type="checkbox" id="showPrizes" ${activity.showPrizes?'checked':''}><span></span></label><span>在小程序活动页展示奖品列表</span></div></div>
-            <div class="field full"><label class="required">活动规则</label><textarea id="activityRules">${activity.rules}</textarea></div>
+            <div class="field full"><label class="required">小程序顶部主题图</label><div class="media-config"><div class="media-thumb ${activity.themeStyle==='supply'?'supply':''}"><span>活动顶部主题图</span></div><div class="media-meta"><strong id="coverName">${activity.coverName}</strong><p>支持 JPG / PNG / WEBP，不超过2MB，建议尺寸750×560；替换后同步用于小程序活动页顶部。</p><div class="media-actions"><button class="btn small" type="button" data-action="change-theme-image">更换主题图</button><button class="btn small" type="button" data-action="preview-miniapp">预览小程序页面</button></div></div></div></div>
+          </div></section>
+          <section class="form-section"><h3 class="form-section-title">活动说明内容</h3><div class="form-grid">
+            <div class="field full"><label class="required">活动介绍</label><textarea class="compact-textarea" id="activityIntroduction" maxlength="500">${activity.introduction}</textarea><div class="field-help">展示在小程序“活动信息—活动介绍”页签，最多500字。</div></div>
+            <div class="field full"><label class="required">活动规则</label><textarea id="activityRules" maxlength="2000">${activity.rules}</textarea><div class="field-help">建议写明活动时间、参与对象、抽奖机会、助力、中奖概率、领奖及核销规则。</div></div>
+            <div class="field full"><label class="required">免责声明</label><textarea class="compact-textarea" id="activityDisclaimer" maxlength="1000">${activity.disclaimer}</textarea><div class="field-help">展示在小程序“免责声明”页签及页面底部入口，最多1000字。</div></div>
           </div></section>
           <section class="form-section"><h3 class="form-section-title">参与与中奖规则</h3><div class="form-grid three">
             ${field('基础抽奖机会','baseChances',activity.baseChances,true,'number',false,'用户首次进入活动获得的机会数')}
@@ -697,21 +868,47 @@
             ${field('每名好友每日助力上限','helperDailyLimit',activity.helperDailyLimit,true,'number',false,'本活动固定为1次')}
             ${field('每个账号每日中奖上限','dailyWinLimit',activity.dailyWinLimit,true,'number',false,'可跨活动日多次中奖')}
           </div></section>
+          <section class="form-section"><h3 class="form-section-title">微信分享宣传</h3><div class="form-grid">
+            <div class="field"><label class="required">分享卡片标题</label><input id="shareTitle" maxlength="32" value="${activity.shareTitle}"><div class="field-help">建议12—24字，最多32字。</div></div>
+            ${field('分享落地页','shareLandingPath',activity.shareLandingPath,false,'text',true,'固定进入当前活动的好友助力页')}
+            <div class="field full"><label class="required">项目/活动宣传语</label><textarea class="compact-textarea" id="sharePromotion" maxlength="60">${activity.sharePromotion}</textarea><div class="field-help">好友看到的分享卡片和助力落地页均展示该内容，最多60字。</div></div>
+            <div class="field full"><label class="required">微信分享封面</label><div class="media-config"><div class="media-thumb share ${activity.shareStyle==='supply'?'supply':''}"><span>项目宣传 + 好友助力</span></div><div class="media-meta"><strong id="shareCoverName">${activity.shareCoverName}</strong><p>支持 JPG / PNG / WEBP，不超过2MB，建议比例5:4；分享时同时传播项目或活动信息。</p><div class="media-actions"><button class="btn small" type="button" data-action="change-share-image">更换分享封面</button><button class="btn small" type="button" data-action="preview-share-card">预览分享卡片</button></div></div></div></div>
+          </div></section>
+          <section class="form-section"><h3 class="form-section-title">助力成功后去向</h3><div class="form-grid">
+            <div class="field"><label>进入住房供应链首页</label><div class="switch-row"><label class="switch"><input type="checkbox" id="assistJumpEnabled" ${activity.assistJumpEnabled?'checked':''}><span></span></label><span>助力成功后展示进入首页按钮</span></div><div class="field-help">先反馈助力结果，再由用户主动点击进入。</div></div>
+            <div class="field"><label>跳转方式</label><div class="readonly-box">同一“湖北省住房供应链”小程序内页面跳转<span class="status active">固定</span></div></div>
+            ${field('目标页面路径','assistJumpPath',activity.assistJumpPath,true,'text',false,'必须以 /pages/ 开头，不配置外部小程序 AppID')}
+            ${field('按钮文案','assistJumpButtonText',activity.assistJumpButtonText,true,'text',false,'最多12个汉字')}
+            <div class="field full"><button class="btn" type="button" data-action="preview-assist-jump">预览“助力成功 → 住房供应链首页”流程</button></div>
+          </div></section>
           <div class="form-footer"><button class="btn" type="button" data-action="reset-basic">恢复当前配置</button><button class="btn primary" type="submit">保存活动配置</button></div>
         </form>`;
       }
 
       function prizesTab() {
-        const prob = totalProbability();
-        return `<div class="card-body">
-          <div id="prizeConfigAlert"></div>
-          <div class="toolbar"><div class="probability-summary"><span>已配置 <b>${prizeConfigs.length}</b> 种奖品</span><span>配置数量 <b>${sum(prizeConfigs.map(i=>i.qty))}</b> 份</span><span>总中奖概率 <b id="probabilityTotal">${prob.toFixed(2)}%</b></span><span>未中奖概率 <b id="missProbability">${(100-prob).toFixed(2)}%</b></span></div><button class="btn primary" data-action="add-activity-prize">＋ 新增活动奖品</button></div>
-          <div class="table-wrap"><table id="prizeConfigTable"><thead><tr><th>奖品</th><th>奖项名称</th><th>配置数量</th><th>中奖概率（%）</th>${dates.map(d=>`<th class="release-cell">${d}<div class="cell-sub">新增库存</div></th>`).join('')}<th>释放合计</th><th>已中奖/剩余</th><th>操作</th></tr></thead><tbody>
+        const totals = dailyProbabilityTotals();
+        const probabilityMode = ui.prizeConfigMode === 'probability';
+        const table = probabilityMode ? `
+          <div class="table-wrap"><table id="prizeConfigTable"><thead><tr><th>奖品</th><th>奖项名称</th><th>配置数量</th>${dates.map(d=>`<th class="probability-cell">${d}<div class="cell-sub">中奖概率（%）</div></th>`).join('')}<th>概率范围</th><th>已中奖/剩余</th><th>操作</th></tr></thead><tbody>
           ${prizeConfigs.map(config => {
             const prize = prizeById(config.prizeId);
-            return `<tr data-config-id="${config.id}"><td style="min-width:190px"><div class="cell-main">${prize.name}</div><div class="cell-sub">总库存 ${prize.total} · 活动占用 ${config.qty}</div></td><td><input class="inline-input" style="width:86px" data-field="label" value="${config.label}"></td><td><input class="inline-input" data-field="qty" type="number" min="0" value="${config.qty}"></td><td><input class="inline-input probability-input" data-field="probability" type="number" min="0" max="100" step="0.01" value="${config.probability}"></td>${config.release.map((value,index)=>`<td class="release-cell"><input class="inline-input release-input" data-release-index="${index}" type="number" min="0" value="${value}"></td>`).join('')}<td><span class="release-total ok">${sum(config.release)} / ${config.qty}</span></td><td>${config.won} / ${config.remaining}</td><td><button class="btn link" data-action="remove-activity-prize" data-config-id="${config.id}">移除</button></td></tr>`;
+            const min = Math.min(...config.probabilities);
+            const max = Math.max(...config.probabilities);
+            return `<tr data-config-id="${config.id}"><td style="min-width:190px"><div class="cell-main">${prize.name}</div><div class="cell-sub">总库存 ${prize.total} · 活动占用 ${config.qty}</div></td><td><input class="inline-input" style="width:86px" data-field="label" value="${config.label}"></td><td><input class="inline-input" data-field="qty" type="number" min="0" value="${config.qty}"></td>${config.probabilities.map((value,index)=>`<td class="probability-cell"><input class="inline-input probability-input" data-probability-index="${index}" type="number" min="0" max="100" step="0.01" value="${value}"></td>`).join('')}<td class="nowrap">${formatPercent(min)}—${formatPercent(max)}</td><td>${config.won} / ${config.remaining}</td><td><button class="btn link" data-action="remove-activity-prize" data-config-id="${config.id}">移除</button></td></tr>`;
           }).join('')}</tbody></table></div>
-          <div class="form-alert info">每日数量表示当日新增可抽库存；前一日未抽完的已释放库存自动保留至后续日期。活动结束后不补抽。</div>
+          <div class="form-alert info">每一天、每一种奖品分别设置即时中奖概率。0%表示该奖品当天不会抽中；大于0%只代表具备中奖可能，不支持“保证一定抽出”。每天全部奖品概率之和不得超过100%。</div>` : `
+          <div class="table-wrap"><table id="prizeConfigTable"><thead><tr><th>奖品</th><th>奖项名称</th><th>配置数量</th>${dates.map(d=>`<th class="release-cell">${d}<div class="cell-sub">新增库存</div></th>`).join('')}<th>释放合计</th><th>已中奖/剩余</th><th>操作</th></tr></thead><tbody>
+          ${prizeConfigs.map(config => {
+            const prize = prizeById(config.prizeId);
+            return `<tr data-config-id="${config.id}"><td style="min-width:190px"><div class="cell-main">${prize.name}</div><div class="cell-sub">总库存 ${prize.total} · 活动占用 ${config.qty}</div></td><td><input class="inline-input" style="width:86px" data-field="label" value="${config.label}"></td><td><input class="inline-input" data-field="qty" type="number" min="0" value="${config.qty}"></td>${config.release.map((value,index)=>`<td class="release-cell"><input class="inline-input release-input" data-release-index="${index}" type="number" min="0" value="${value}"></td>`).join('')}<td><span class="release-total ok">${sum(config.release)} / ${config.qty}</span></td><td>${config.won} / ${config.remaining}</td><td><button class="btn link" data-action="remove-activity-prize" data-config-id="${config.id}">移除</button></td></tr>`;
+          }).join('')}</tbody></table></div>
+          <div class="form-alert info">每日数量表示当日新增可抽库存；前一日未抽完的已释放库存自动保留至后续日期。活动结束后不补抽。</div>`;
+        return `<div class="card-body">
+          <div id="prizeConfigAlert"></div>
+          <div class="toolbar"><div class="probability-summary"><span>已配置 <b>${prizeConfigs.length}</b> 种奖品</span><span>配置数量 <b>${sum(prizeConfigs.map(i=>i.qty))}</b> 份</span><span>概率方式 <b>按天 × 奖品</b></span></div><button class="btn primary" data-action="add-activity-prize">＋ 新增活动奖品</button></div>
+          <div class="daily-probability-summary" id="dailyProbabilitySummary">${dailyProbabilityCards(totals)}</div>
+          <div class="toolbar"><div class="sub-tabs"><button class="sub-tab ${probabilityMode?'active':''}" data-prize-config-mode="probability">每日中奖概率</button><button class="sub-tab ${!probabilityMode?'active':''}" data-prize-config-mode="release">每日新增库存</button></div><span class="cell-sub">两个视图共用同一批活动奖品，分别保存概率与库存配置。</span></div>
+          ${table}
         </div><div class="form-footer"><button class="btn" data-action="reset-prize-config">恢复当前配置</button><button class="btn primary" data-action="save-prize-config">保存奖品配置</button></div>`;
       }
 
@@ -749,13 +946,14 @@
 
       function renderPrizeDetail() {
         const prize = prizeById(ui.selectedPrize);
-        const linked = prize.activities ? `<tr><td>${activity.name}</td><td>${statusTag(activity.status)}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.qty || 0}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.remaining ?? 0}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.won ?? 0}</td><td>${prizeConfigs.find(i=>i.prizeId===prize.id)?.probability ?? 0}%</td><td><button class="btn link" data-action="view-activity" data-id="${activity.id}">查看活动</button></td></tr>` : `<tr><td colspan="7"><div class="empty">当前没有活动使用这个奖品</div></td></tr>`;
+        const linkedConfig = prizeConfigs.find(i=>i.prizeId===prize.id);
+        const linked = prize.activities ? `<tr><td>${activity.name}</td><td>${statusTag(activity.status)}</td><td>${linkedConfig?.qty || 0}</td><td>${linkedConfig?.remaining ?? 0}</td><td>${linkedConfig?.won ?? 0}</td><td>${linkedConfig ? linkedConfig.probabilities.map(formatPercent).join(' / ') : '0%'}</td><td><button class="btn link" data-action="view-activity" data-id="${activity.id}">查看活动</button></td></tr>` : `<tr><td colspan="7"><div class="empty">当前没有活动使用这个奖品</div></td></tr>`;
         $('#view').innerHTML = `
           <div class="breadcrumb"><button data-action="back-prizes">奖品管理</button>　/　${prize.name}</div>
           <div class="page-header"><div><h1>${prize.name}</h1><p>${prize.id} · 维护奖品基础信息和库存。</p></div><div class="header-actions"><button class="btn" data-action="back-prizes">返回奖品列表</button></div></div>
           <div class="metric-grid" style="grid-template-columns:repeat(4,1fr)">${metricCard('总库存',prize.total,'全局库存')}${metricCard('已被活动占用',prize.occupied,'活动预占数量')}${metricCard('剩余可分配',prize.total-prize.occupied,'可用于其他活动')}${metricCard('参与活动数',prize.activities,'关联活动')}</div>
           <form class="card" id="prizeForm" novalidate><div class="card-header"><div><h2>奖品基础设置</h2><p>已被活动引用时，总库存只能增加或保持不变。</p></div></div><div id="prizeFormAlert"></div><div class="card-body"><div class="form-grid">${field('奖品名称','prizeName',prize.name,true)}${field('总库存','prizeTotal',prize.total,true,'number',false,`当前活动已占用 ${prize.occupied}，总库存不能小于该数值`)}<div class="field full"><label class="required">奖品说明</label><textarea id="prizeDescription">${prize.description}</textarea></div></div></div><div class="form-footer"><button class="btn" type="button" data-action="back-prizes">取消</button><button class="btn primary" type="submit">保存奖品</button></div></form>
-          <section class="card"><div class="card-header"><div><h2>关联活动配置</h2><p>查看这个奖品在哪些活动中被使用，以及对应数量和中奖概率。</p></div></div><div class="card-body"><div class="table-wrap"><table><thead><tr><th>活动名称</th><th>活动状态</th><th>配置数量</th><th>剩余库存</th><th>已中奖数量</th><th>中奖概率</th><th>操作</th></tr></thead><tbody>${linked}</tbody></table></div></div></section>`;
+          <section class="card"><div class="card-header"><div><h2>关联活动配置</h2><p>查看这个奖品在哪些活动中被使用，以及对应数量和每日中奖概率。</p></div></div><div class="card-body"><div class="table-wrap"><table><thead><tr><th>活动名称</th><th>活动状态</th><th>配置数量</th><th>剩余库存</th><th>已中奖数量</th><th>8月3—7日中奖概率</th><th>操作</th></tr></thead><tbody>${linked}</tbody></table></div></div></section>`;
       }
 
       function metricCard(label,value,note) { return `<div class="metric-card"><div class="metric-label">${label}</div><div class="metric-value">${value}</div><div class="metric-note">${note}</div></div>`; }
@@ -775,7 +973,14 @@
         const helps = Number($('#helpsPerChance').value);
         const helperLimit = Number($('#helperDailyLimit').value);
         const winLimit = Number($('#dailyWinLimit').value);
+        const introduction = $('#activityIntroduction').value.trim();
         const rules = $('#activityRules').value.trim();
+        const disclaimer = $('#activityDisclaimer').value.trim();
+        const shareTitle = $('#shareTitle').value.trim();
+        const sharePromotion = $('#sharePromotion').value.trim();
+        const assistJumpEnabled = $('#assistJumpEnabled').checked;
+        const assistJumpPath = $('#assistJumpPath').value.trim();
+        const assistJumpButtonText = $('#assistJumpButtonText').value.trim();
         const errors = [];
         if (!name) errors.push('活动主题不能为空');
         if (!subtitle) errors.push('活动副标题不能为空');
@@ -784,24 +989,34 @@
         if (!Number.isInteger(helps) || helps < 1) errors.push('助力人数必须为大于0的整数');
         if (helperLimit !== 1) errors.push('本活动每名好友每日助力上限应为1次');
         if (winLimit !== 1) errors.push('本活动每个账号每日中奖上限应为1次');
+        if (!introduction) errors.push('活动介绍不能为空');
         if (!rules) errors.push('活动规则不能为空');
+        if (!disclaimer) errors.push('免责声明不能为空');
+        if (!shareTitle) errors.push('分享卡片标题不能为空');
+        if (shareTitle.length > 32) errors.push('分享卡片标题不能超过32字');
+        if (!sharePromotion) errors.push('项目/活动宣传语不能为空');
+        if (sharePromotion.length > 60) errors.push('项目/活动宣传语不能超过60字');
+        if (assistJumpEnabled && !/^\/pages\/[a-zA-Z0-9_/-]+$/.test(assistJumpPath)) errors.push('助力成功目标路径必须是以/pages/开头的同一小程序页面');
+        if (assistJumpEnabled && (!assistJumpButtonText || assistJumpButtonText.length > 12)) errors.push('助力成功按钮文案应为1—12个字');
         if (errors.length) { showActivityFormError(errors); return; }
-        Object.assign(activity,{name,subtitle,start,end,baseChances:base,helpsPerChance:helps,helperDailyLimit:helperLimit,dailyWinLimit:winLimit,rules,template:$('#activityTemplate').value,showPrizes:$('#showPrizes').checked,helpEnabled:$('#helpEnabled').checked});
+        Object.assign(activity,{name,subtitle,start,end,baseChances:base,helpsPerChance:helps,helperDailyLimit:helperLimit,dailyWinLimit:winLimit,introduction,rules,disclaimer,shareTitle,sharePromotion,assistJumpEnabled,assistJumpPath,assistJumpButtonText,template:$('#activityTemplate').value,showPrizes:$('#showPrizes').checked,helpEnabled:$('#helpEnabled').checked});
         activities[0] = activity;
         $('#activityFormAlert').innerHTML = '';
-        toast('活动配置保存成功','success');
+        toast('活动页面、说明、分享与助力跳转配置保存成功','success');
       }
 
       function readPrizeConfigTable() {
         const draft = [];
         $$('#prizeConfigTable tbody tr').forEach(row => {
           const old = prizeConfigs.find(item=>item.id===row.dataset.configId);
+          const probabilityInputs = $$('[data-probability-index]',row);
+          const releaseInputs = $$('[data-release-index]',row);
           draft.push({
             ...old,
             label:$('[data-field="label"]',row).value.trim(),
             qty:Number($('[data-field="qty"]',row).value),
-            probability:Number($('[data-field="probability"]',row).value),
-            release:$$('[data-release-index]',row).map(input=>Number(input.value))
+            probabilities:probabilityInputs.length ? probabilityInputs.map(input=>Number(input.value)) : [...old.probabilities],
+            release:releaseInputs.length ? releaseInputs.map(input=>Number(input.value)) : [...old.release]
           });
         });
         return draft;
@@ -815,32 +1030,41 @@
           if (!item.label) errors.push(`${prize.name}的奖项名称不能为空`);
           if (!Number.isInteger(item.qty) || item.qty < 1) errors.push(`${prize.name}的配置数量不正确`);
           if (item.qty > prize.total) errors.push(`${prize.name}配置数量超过总库存${prize.total}`);
-          if (item.probability < 0 || item.probability > 100) errors.push(`${prize.name}的中奖概率应在0—100之间`);
+          if (item.probabilities.some(value=>!Number.isFinite(value)||value<0||value>100)) errors.push(`${prize.name}每天的中奖概率都应在0—100之间`);
           if (item.release.some(value=>!Number.isInteger(value)||value<0)) errors.push(`${prize.name}的分日数量必须为非负整数`);
           if (sum(item.release) !== item.qty) errors.push(`${prize.name}的分日释放合计必须等于配置数量${item.qty}`);
         });
-        if (sum(draft.map(i=>i.probability)) > 100) errors.push('全部奖品中奖概率之和不能超过100%');
+        dailyProbabilityTotals(draft).forEach((total,index)=>{
+          if(total>100) errors.push(`${dates[index]}全部奖品中奖概率之和为${formatPercent(total)}，不能超过100%`);
+        });
         if (errors.length) {
           $('#prizeConfigAlert').innerHTML = `<div class="form-alert error"><b>无法保存：</b>${errors.slice(0,5).join('；')}${errors.length>5?'；请继续检查其他奖品配置':''}</div>`;
           $('#prizeConfigAlert').scrollIntoView({behavior:'smooth',block:'center'});
           return;
         }
-        draft.forEach((item,index)=>Object.assign(prizeConfigs[index],item));
+        draft.forEach(item=>Object.assign(prizeConfigs.find(config=>config.id===item.id),item));
         $('#prizeConfigAlert').innerHTML = '';
-        toast('奖品数量、概率和分日释放配置保存成功','success');
+        toast(`${ui.prizeConfigMode==='probability'?'每日中奖概率':'每日新增库存'}配置保存成功`,'success');
         renderActivityDetail();
       }
 
       function updateProbabilityPreview() {
         const table = $('#prizeConfigTable');
         if (!table) return;
-        const prob = sum($$('.probability-input',table).map(input=>Number(input.value)||0));
-        $('#probabilityTotal').textContent = `${prob.toFixed(2)}%`;
-        $('#missProbability').textContent = `${Math.max(0,100-prob).toFixed(2)}%`;
+        if (ui.prizeConfigMode === 'probability') {
+          dates.forEach((date,index)=>{
+            const total = sum($$(`[data-probability-index="${index}"]`,table).map(input=>Number(input.value)||0));
+            const totalEl = $(`#dayTotal${index}`);
+            const missEl = $(`#dayMiss${index}`);
+            if(totalEl) totalEl.textContent = formatPercent(total);
+            if(missEl) missEl.textContent = `未中奖 ${formatPercent(Math.max(0,100-total))}`;
+          });
+        }
         $$('tbody tr',table).forEach(row=>{
           const qty = Number($('[data-field="qty"]',row).value)||0;
           const releaseTotal = sum($$('.release-input',row).map(input=>Number(input.value)||0));
           const el = $('.release-total',row);
+          if(!el) return;
           el.textContent = `${releaseTotal} / ${qty}`;
           el.className = `release-total ${releaseTotal===qty?'ok':'bad'}`;
         });
@@ -872,8 +1096,54 @@
         $('#prizeTableBody').innerHTML = prizeRows(prizes.filter(item=>!keyword||item.name.toLowerCase().includes(keyword)));
       }
 
+      function draftValue(id, fallback='') {
+        const el = $(`#${id}`);
+        return el ? el.value.trim() : fallback;
+      }
+
+      function openImagePicker(kind) {
+        const isTheme = kind === 'theme';
+        openModal(`<div class="modal-header"><h3>${isTheme?'更换小程序顶部主题图':'更换微信分享封面'}</h3><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="form-alert info" style="margin:0 0 14px">高保真原型以预设素材模拟上传、格式校验和替换成功；正式系统接入现有图片上传组件。</div><div class="form-grid"><button class="media-config" type="button" data-action="select-config-image" data-image-kind="${kind}" data-image-style="mountain"><div class="media-thumb ${isTheme?'':'share'}"><span>悦鉴山月活动方案</span></div><div class="media-meta" style="text-align:left"><strong>${isTheme?'悦鉴山月抽奖主题图.png':'悦鉴山月微信分享图.png'}</strong><p>橙红暖色活动视觉</p></div></button><button class="media-config" type="button" data-action="select-config-image" data-image-kind="${kind}" data-image-style="supply"><div class="media-thumb supply ${isTheme?'':'share'}"><span>住房供应链品牌方案</span></div><div class="media-meta" style="text-align:left"><strong>${isTheme?'住房供应链惠民主题图.png':'住房供应链品牌分享图.png'}</strong><p>绿色品牌服务视觉</p></div></button></div></div><div class="modal-footer"><button class="btn" data-action="close-modal">取消</button></div>`);
+      }
+
+      function selectConfigImage(kind, style) {
+        if(kind==='theme') {
+          activity.themeStyle = style;
+          activity.coverName = style==='supply'?'住房供应链惠民主题图.png':'悦鉴山月抽奖主题图.png';
+        }
+        if(kind==='share') {
+          activity.shareStyle = style;
+          activity.shareCoverName = style==='supply'?'住房供应链品牌分享图.png':'悦鉴山月微信分享图.png';
+        }
+        closeModal();
+        renderActivityDetail();
+        toast(`${kind==='theme'?'顶部主题图':'微信分享封面'}已替换，请保存活动配置`,'success');
+      }
+
+      function openMiniappPreview() {
+        const name = draftValue('activityName',activity.name);
+        const subtitle = draftValue('activitySubtitle',activity.subtitle);
+        const intro = draftValue('activityIntroduction',activity.introduction);
+        const rules = draftValue('activityRules',activity.rules);
+        const disclaimer = draftValue('activityDisclaimer',activity.disclaimer);
+        openModal(`<div class="modal-header"><h3>小程序活动页预览</h3><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="preview-layout"><div class="phone-preview"><div class="phone-preview-bar">抽奖活动</div><div class="phone-preview-hero ${activity.themeStyle==='supply'?'supply':''}"><small>${name}</small><h3>玩游戏　抽大奖</h3><p>${subtitle}</p></div><div class="phone-preview-body"><div class="phone-preview-card"><b>活动信息</b><br>活动介绍　活动规则　免责声明</div><div class="phone-preview-card"><b>幸运抽大奖</b><br>抽奖、奖品橱窗、中奖播报与助力排行榜沿用2.0。</div></div></div><div class="preview-copy"><h4>前台内容对齐检查</h4><p>主题图、活动标题以及三类说明内容均由当前活动配置生成，预览不会保存未提交内容。</p><div class="preview-list"><div><b>活动介绍</b><br>${intro.slice(0,90)}${intro.length>90?'…':''}</div><div><b>活动规则</b><br>${rules.slice(0,120)}${rules.length>120?'…':''}</div><div><b>免责声明</b><br>${disclaimer.slice(0,100)}${disclaimer.length>100?'…':''}</div></div></div></div></div><div class="modal-footer"><button class="btn primary" data-action="close-modal">关闭预览</button></div>`, 'wide');
+      }
+
+      function openSharePreview() {
+        const shareTitle = draftValue('shareTitle',activity.shareTitle);
+        const sharePromotion = draftValue('sharePromotion',activity.sharePromotion);
+        openModal(`<div class="modal-header"><h3>微信分享卡片预览</h3><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="preview-layout"><div class="share-preview-card ${activity.shareStyle==='supply'?'supply':''}"><small>${activity.name}</small><h3>${shareTitle}</h3><p>${sharePromotion}</p></div><div class="preview-copy"><h4>分享与落地页配置</h4><p>分享卡片不仅表达“帮好友助力”，同时承载活动或项目宣传信息。</p><div class="preview-list"><div><b>分享封面</b><br>${activity.shareCoverName}</div><div><b>好友打开后</b><br>进入当前活动好友助力页：${activity.shareLandingPath}</div><div><b>有效助力条件</b><br>好友主动点击“帮TA助力”且接口返回成功后，才增加助力人数。</div></div></div></div></div><div class="modal-footer"><button class="btn primary" data-action="close-modal">关闭预览</button></div>`, 'wide');
+      }
+
+      function openAssistJumpPreview() {
+        const jumpEnabled = $('#assistJumpEnabled')?.checked ?? activity.assistJumpEnabled;
+        const jumpPath = draftValue('assistJumpPath',activity.assistJumpPath);
+        const buttonText = draftValue('assistJumpButtonText',activity.assistJumpButtonText);
+        openModal(`<div class="modal-header"><h3>助力成功后流程预览</h3><button class="modal-close" data-action="close-modal">×</button></div><div class="modal-body"><div class="preview-layout"><div class="phone-preview"><div class="phone-preview-bar">好友助力</div><div class="phone-preview-body" style="padding:24px"><div style="font-size:42px;text-align:center">🤝</div><h3 style="text-align:center;margin:8px 0">助力成功</h3><p style="text-align:center;color:#7f8997;font-size:10px;line-height:1.6">先明确反馈助力已生效，再由用户选择是否进入住房供应链首页。</p>${jumpEnabled?`<button class="btn primary" style="width:100%;margin-top:12px">${buttonText}</button>`:`<div class="form-alert info" style="margin:12px 0 0">当前未开启进入首页按钮</div>`}<button class="btn" style="width:100%;margin-top:8px">留在抽奖活动</button></div></div><div class="preview-copy"><h4>同一小程序内跳转</h4><p>不配置外部小程序AppID，不发起跨小程序跳转。用户点击主按钮后调用同一小程序页面路由。</p><div class="preview-list"><div><b>触发条件</b><br>助力接口返回成功</div><div><b>目标页面</b><br>${jumpPath}</div><div><b>失败处理</b><br>助力失败、重复助力、自助力、活动结束或网络异常时均不展示跳转按钮，继续显示原有失败提示。</div></div></div></div></div><div class="modal-footer"><button class="btn primary" data-action="close-modal">关闭预览</button></div>`, 'wide');
+      }
+
       function openNewActivity() {
-        openModal(`<div class="modal-header"><h3>新增抽奖活动</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="newActivityForm" novalidate><div class="modal-body"><div id="newActivityAlert"></div><div class="form-grid">${field('活动主题','newActivityName','',true)}${field('活动副标题','newActivitySubtitle','',true)}${field('开始时间','newActivityStart','2026-08-03T00:00',true,'datetime-local')}${field('结束时间','newActivityEnd','2026-08-07T23:59',true,'datetime-local')}<div class="field"><label class="required">抽奖模板</label><select id="newActivityTemplate"><option>老虎机</option><option>大转盘</option><option>刮刮卡</option></select></div><div class="field"><label>基础抽奖机会</label><input value="3" readonly><div class="field-help">创建后可在活动配置中调整。</div></div></div><div class="form-alert info" style="margin:16px 0 0">活动创建成功后，继续进入详情配置奖品、概率、分日释放和活动规则。</div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">创建并进入配置</button></div></form>`);
+        openModal(`<div class="modal-header"><h3>新增抽奖活动</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="newActivityForm" novalidate><div class="modal-body"><div id="newActivityAlert"></div><div class="form-grid">${field('活动主题','newActivityName','',true)}${field('活动副标题','newActivitySubtitle','',true)}${field('开始时间','newActivityStart','2026-08-03T00:00',true,'datetime-local')}${field('结束时间','newActivityEnd','2026-08-07T23:59',true,'datetime-local')}<div class="field"><label class="required">抽奖模板</label><select id="newActivityTemplate"><option>老虎机</option><option>大转盘</option><option>刮刮卡</option></select></div><div class="field"><label>基础抽奖机会</label><input value="3" readonly><div class="field-help">创建后可在活动配置中调整。</div></div></div><div class="form-alert info" style="margin:16px 0 0">活动创建成功后，继续进入详情配置顶部主题图、活动说明、分享宣传、助力成功去向，以及按天按奖品中奖概率。</div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">创建并进入配置</button></div></form>`);
       }
 
       function submitNewActivity() {
@@ -893,25 +1163,26 @@
       function openAddPrize() {
         const available = prizes.filter(prize=>!prizeConfigs.some(config=>config.prizeId===prize.id));
         if(!available.length){ toast('奖品库中没有可继续添加的奖品','error'); return; }
-        openModal(`<div class="modal-header"><h3>新增活动奖品</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="addPrizeForm" novalidate><div class="modal-body"><div id="addPrizeAlert"></div><div class="form-grid"><div class="field full"><label class="required">选择奖品</label><select id="addPrizeId">${available.map(p=>`<option value="${p.id}">${p.name}（可分配 ${p.total-p.occupied}）</option>`).join('')}</select></div>${field('奖项名称','addPrizeLabel','纪念奖',true)}${field('配置数量','addPrizeQty',1,true,'number')}${field('中奖概率（%）','addPrizeProbability',1,true,'number')}<div class="field full"><label class="required">8月3日至7日分日新增库存</label><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">${dates.map((d,i)=>`<div><div class="field-help" style="margin:0 0 4px">${d}</div><input class="add-release" type="number" min="0" value="${i===0?1:0}"></div>`).join('')}</div></div></div><div class="field-help" style="margin-top:12px">分日释放合计必须等于配置数量；前日剩余库存自动保留。</div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">确认添加</button></div></form>`);
+        openModal(`<div class="modal-header"><h3>新增活动奖品</h3><button class="modal-close" data-action="close-modal">×</button></div><form id="addPrizeForm" novalidate><div class="modal-body"><div id="addPrizeAlert"></div><div class="form-grid"><div class="field full"><label class="required">选择奖品</label><select id="addPrizeId">${available.map(p=>`<option value="${p.id}">${p.name}（可分配 ${p.total-p.occupied}）</option>`).join('')}</select></div>${field('奖项名称','addPrizeLabel','纪念奖',true)}${field('配置数量','addPrizeQty',1,true,'number')}<div class="field full"><label class="required">8月3日至7日每日中奖概率（%）</label><div class="daily-input-grid">${dates.map(d=>`<div><div class="field-help">${d}</div><input class="add-probability" type="number" min="0" max="100" step="0.01" value="1"></div>`).join('')}</div><div class="field-help">0%表示当天不会抽中；大于0%不代表保证抽出。加入后每天全部奖品概率之和不得超过100%。</div></div><div class="field full"><label class="required">8月3日至7日分日新增库存</label><div class="daily-input-grid">${dates.map((d,i)=>`<div><div class="field-help">${d}</div><input class="add-release" type="number" min="0" value="${i===0?1:0}"></div>`).join('')}</div><div class="field-help">分日释放合计必须等于配置数量；前日剩余库存自动保留。</div></div></div></div><div class="modal-footer"><button class="btn" type="button" data-action="close-modal">取消</button><button class="btn primary" type="submit">确认添加</button></div></form>`, 'wide');
       }
 
       function submitAddPrize() {
         const prizeId=$('#addPrizeId').value;
         const prize=prizeById(prizeId);
         const qty=Number($('#addPrizeQty').value);
-        const probability=Number($('#addPrizeProbability').value);
+        const probabilities=$$('.add-probability').map(input=>Number(input.value));
         const release=$$('.add-release').map(i=>Number(i.value));
         const label=$('#addPrizeLabel').value.trim();
         const errors=[];
         if(!label) errors.push('奖项名称不能为空');
         if(!Number.isInteger(qty)||qty<1) errors.push('配置数量必须为大于0的整数');
         if(qty>prize.total-prize.occupied) errors.push(`配置数量超过可分配库存${prize.total-prize.occupied}`);
-        if(probability<0||probability>100) errors.push('中奖概率应在0—100之间');
+        if(probabilities.some(value=>!Number.isFinite(value)||value<0||value>100)) errors.push('每天的中奖概率都应在0—100之间');
         if(release.some(v=>!Number.isInteger(v)||v<0)||sum(release)!==qty) errors.push('分日释放合计必须等于配置数量');
-        if(totalProbability()+probability>100) errors.push('加入后总中奖概率超过100%');
+        const currentTotals=dailyProbabilityTotals();
+        probabilities.forEach((value,index)=>{ if(currentTotals[index]+value>100) errors.push(`${dates[index]}加入后总中奖概率超过100%`); });
         if(errors.length){ $('#addPrizeAlert').innerHTML=`<div class="form-alert error" style="margin:0 0 16px">${errors.join('；')}</div>`; return; }
-        prizeConfigs.push({id:`C${String(prizeConfigs.length+1).padStart(3,'0')}`,prizeId,label,qty,probability,release,won:0,remaining:qty});
+        prizeConfigs.push({id:`C${String(prizeConfigs.length+1).padStart(3,'0')}`,prizeId,label,qty,probabilities,release,won:0,remaining:qty});
         prize.occupied+=qty; prize.activities+=1;
         closeModal(); renderActivityDetail(); toast('活动奖品添加成功','success');
       }
@@ -968,6 +1239,8 @@
         if(nav){ ui.view=nav.dataset.nav; ui.activityTab='overview'; render(); return; }
         const tab=event.target.closest('[data-activity-tab]');
         if(tab){ ui.activityTab=tab.dataset.activityTab; renderActivityDetail(); return; }
+        const prizeMode=event.target.closest('[data-prize-config-mode]');
+        if(prizeMode){ ui.prizeConfigMode=prizeMode.dataset.prizeConfigMode; renderActivityDetail(); return; }
         const el=event.target.closest('[data-action]');
         if(!el) return;
         const action=el.dataset.action;
@@ -983,7 +1256,12 @@
         if(action==='pause-activity') confirmPause();
         if(action==='confirm-pause'){ activity.status='paused'; activities[0]=activity; closeModal(); renderActivityDetail(); toast('活动已暂停','success'); }
         if(action==='resume-activity'){ activity.status='active'; activities[0]=activity; renderActivityDetail(); toast('活动已恢复进行','success'); }
-        if(action==='change-cover') toast('已打开图片选择器；取消选择时保留原封面');
+        if(action==='change-theme-image') openImagePicker('theme');
+        if(action==='change-share-image') openImagePicker('share');
+        if(action==='select-config-image') selectConfigImage(el.dataset.imageKind,el.dataset.imageStyle);
+        if(action==='preview-miniapp') openMiniappPreview();
+        if(action==='preview-share-card') openSharePreview();
+        if(action==='preview-assist-jump') openAssistJumpPreview();
         if(action==='reset-basic') { renderActivityDetail(); toast('已恢复为当前已保存配置'); }
         if(action==='add-activity-prize') openAddPrize();
         if(action==='save-prize-config') validateAndSavePrizeConfig();
@@ -1034,7 +1312,9 @@
       $('#modalLayer').addEventListener('click', event => { if(event.target===$('#modalLayer')) closeModal(); });
 
       function sum(values){ return values.reduce((a,b)=>a+(Number(b)||0),0); }
-      function totalProbability(){ return sum(prizeConfigs.map(i=>i.probability)); }
+      function dailyProbabilityTotals(configs=prizeConfigs){ return dates.map((_,index)=>sum(configs.map(item=>item.probabilities[index]))); }
+      function formatPercent(value){ return `${Number(value).toFixed(2).replace(/\.?0+$/,'')}%`; }
+      function dailyProbabilityCards(totals){ return totals.map((total,index)=>`<div class="day-probability-card"><span>${dates[index]} · 全部奖品</span><b id="dayTotal${index}">${formatPercent(total)}</b><small id="dayMiss${index}">未中奖 ${formatPercent(Math.max(0,100-total))}</small></div>`).join(''); }
       function formatNumber(value){ return Number(value).toLocaleString('zh-CN'); }
       function fmtDate(value){ return value.replace('T',' ').slice(0,16); }
       function fmtDateTime(value){ return value.replace('T',' '); }
